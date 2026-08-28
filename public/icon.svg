@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="104" fill="#0b3267"/>
+  <circle cx="377" cy="142" r="168" fill="none" stroke="#7eabd2" stroke-opacity=".48" stroke-width="2"/>
+  <text x="58" y="235" fill="#fff" font-family="Arial, sans-serif" font-size="78" font-weight="800" letter-spacing="-6">ZIEMER</text>
+  <text x="58" y="321" fill="#f0ae5f" font-family="Arial, sans-serif" font-size="76" font-weight="800" letter-spacing="-6">USER</text>
+  <text x="58" y="386" fill="#f0ae5f" font-family="Arial, sans-serif" font-size="55" font-weight="800" letter-spacing="-4">MEETING</text>
+</svg>
