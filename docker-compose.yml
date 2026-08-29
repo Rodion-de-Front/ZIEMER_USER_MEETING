@@ -43,16 +43,12 @@ services:
       - "${PORT:-8080}:80"
     restart: unless-stopped
 
-  pgadmin:
-    image: dpage/pgadmin4:9.6
+  adminer:
+    image: adminer:latest
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+      ADMINER_DEFAULT_SERVER: postgres
     ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - "${ADMINER_PORT:-5050}:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -60,4 +56,3 @@ services:
 
 volumes:
   postgres_data:
-  pgadmin_data:

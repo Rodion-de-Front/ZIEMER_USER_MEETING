@@ -3,10 +3,12 @@ import { ArrowRight, LockKeyhole, Mail } from 'lucide-react'
 import { api, setToken } from '../lib/api'
 import { Logo } from '../components/Logo'
 import { BlockedPage } from './BlockedPage'
+import { useLanguage } from '../i18n'
 
 const emptyForm = { email: '', password: '', fullName: '', workplace: '', city: '', phone: '' }
 
 export function AuthPage() {
+  const { language, setLanguage, t } = useLanguage()
   const [mode, setMode] = useState('login')
   const [form, setForm] = useState(emptyForm)
   const [status, setStatus] = useState('')
@@ -45,25 +47,28 @@ export function AuthPage() {
   return (
     <main className="auth-page">
       <section className="auth-card">
-        <Logo />
+        <div className="auth-brand-row">
+          <Logo />
+          <button className="language-button auth-language-button" type="button" onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}>{t('language')}</button>
+        </div>
         <p className="auth-kicker">ZIEMER USER MEETING · 2026</p>
-        <h1>{register ? 'Создайте аккаунт' : 'Добро пожаловать'}</h1>
-        <p className="auth-subtitle">{register ? 'Заполните профиль участника, чтобы войти в закрытый портал.' : 'Войдите в закрытый портал участников.'}</p>
+        <h1>{register ? t('createAccount') : t('welcome')}</h1>
+        <p className="auth-subtitle">{register ? t('registerText') : t('loginText')}</p>
         <form className="auth-form" onSubmit={submit}>
           {register && <>
-            <label>ФИО<input name="fullName" value={form.fullName} onChange={update} required autoComplete="name" /></label>
-            <label>Место работы<input name="workplace" value={form.workplace} onChange={update} required autoComplete="organization" /></label>
-            <label>Город<input name="city" value={form.city} onChange={update} required autoComplete="address-level2" /></label>
-            <label>Телефон <span>необязательно</span><input name="phone" value={form.phone} onChange={update} autoComplete="tel" /></label>
+            <label>{t('fullName')}<input name="fullName" value={form.fullName} onChange={update} required autoComplete="name" /></label>
+            <label>{t('workplace')}<input name="workplace" value={form.workplace} onChange={update} required autoComplete="organization" /></label>
+            <label>{t('city')}<input name="city" value={form.city} onChange={update} required autoComplete="address-level2" /></label>
+            <label>{t('phone')} <span>{t('optional')}</span><input name="phone" value={form.phone} onChange={update} autoComplete="tel" /></label>
           </>}
-          <label>Почта<div className="input-icon"><Mail size={16} /><input name="email" type="email" value={form.email} onChange={update} required autoComplete="email" /></div></label>
-          <label>Пароль<div className="input-icon"><LockKeyhole size={16} /><input name="password" type="password" value={form.password} onChange={update} required minLength="6" autoComplete={register ? 'new-password' : 'current-password'} /></div></label>
+          <label>{t('email')}<div className="input-icon"><Mail size={16} /><input name="email" type="email" value={form.email} onChange={update} required autoComplete="email" /></div></label>
+          <label>{t('password')}<div className="input-icon"><LockKeyhole size={16} /><input name="password" type="password" value={form.password} onChange={update} required minLength="6" autoComplete={register ? 'new-password' : 'current-password'} /></div></label>
           {status && <p className="form-status" role="status">{status}</p>}
-          <button className="primary-button" disabled={loading} type="submit">{loading ? 'Подождите…' : register ? 'Зарегистрироваться' : 'Войти'} <ArrowRight size={17} /></button>
+          <button className="primary-button" disabled={loading} type="submit">{loading ? t('wait') : register ? t('register') : t('login')} <ArrowRight size={17} /></button>
         </form>
         <button className="text-button" type="button" onClick={() => { setMode(register ? 'login' : 'register'); setStatus('') }}>
-          <span>{register ? 'Уже есть аккаунт?' : 'Нет аккаунта?'}</span>{' '}
-          <span className="auth-switch-action">{register ? 'Войти' : 'Зарегистрироваться'}</span>
+          <span>{register ? t('hasAccount') : t('noAccount')}</span>{' '}
+          <span className="auth-switch-action">{register ? t('login') : t('register')}</span>
         </button>
       </section>
     </main>

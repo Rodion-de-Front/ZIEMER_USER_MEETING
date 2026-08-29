@@ -14,18 +14,24 @@ export function clearToken() {
 }
 
 export async function api(path, options = {}) {
-  const response = await fetch(`${baseUrl}${path}`, {
+  let response
+  try {
+    response = await fetch(`${baseUrl}${path}`, {
     ...options,
     headers: {
       ...(options.body ? { 'Content-Type': 'application/json' } : {}),
       ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
       ...options.headers,
     },
-  })
+    })
+  } catch (error) {
+    if (!navigator.onLine) throw new Error(localStorage.getItem('ziemer-language') === 'en' ? 'No internet connection.' : 'Нет подключения к интернету.')
+    throw error
+  }
   if (response.status === 204) return null
   const data = await response.json().catch(() => ({}))
   if (!response.ok) {
-    const error = new Error(data.error || 'Ошибка запроса')
+    const error = new Error(data.error || (localStorage.getItem('ziemer-language') === 'en' ? 'Request failed' : 'Ошибка запроса'))
     error.code = data.code
     throw error
   }

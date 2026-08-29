@@ -1,42 +1,73 @@
 import { useEffect, useState } from "react";
-import { BellRing, ChevronRight, LogOut, X } from "lucide-react";
+import { BellRing, ChevronRight, LogOut, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
-import { sections } from "../data/conference";
+import { getConferenceContent } from "../data/conference";
 import { api } from "../lib/api";
+import { useLanguage } from "../i18n";
 
 export function NavigationSidebar({ isClosing, onClose, onSignOut, profile }) {
+  const { language, t } = useLanguage();
+  const { sections } = getConferenceContent(language);
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLocaleLowerCase(language);
+  const visibleSections = sections.filter(({ title, caption }) =>
+    `${title} ${caption}`.toLocaleLowerCase(language).includes(normalizedQuery),
+  );
+
   return (
     <aside
       className={`drawer${isClosing ? " is-closing" : ""}`}
-      aria-label="Навигация"
+      aria-label={t('navigation')}
     >
       <button
         className="drawer-close"
         type="button"
-        aria-label="Закрыть навигацию"
+        aria-label={`${t('close')} ${t('navigation').toLowerCase()}`}
         onClick={onClose}
       >
         <X size={19} />
       </button>
       <Logo />
-      <h3>Разделы встречи</h3>
-      {sections.map(({ id, icon: Icon, title }) => (
+      <label className="sidebar-search">
+        <Search size={17} aria-hidden="true" />
+        <input
+          type="text"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder={t("searchPlaceholder")}
+          aria-label={t("search")}
+        />
+        {query && (
+          <button
+            type="button"
+            aria-label={t("close")}
+            onClick={() => setQuery("")}
+          >
+            <X size={15} />
+          </button>
+        )}
+      </label>
+      <h3>{t('sections')}</h3>
+      {visibleSections.map(({ id, icon: Icon, title }) => (
         <Link key={id} to={`/${id}`} onClick={onClose}>
           <Icon size={17} />
           <span>{title}</span>
           <ChevronRight size={16} />
         </Link>
       ))}
+      {normalizedQuery && !visibleSections.length && (
+        <p className="sidebar-search-empty">{t("searchEmpty")}</p>
+      )}
       <div className="sidebar-user">
         <div>
-          <strong>{profile.full_name || "Участник"}</strong>
+          <strong>{profile.full_name || t('participant')}</strong>
           <span>{profile.email}</span>
         </div>
         <button
           className="sidebar-signout-button"
           type="button"
-          aria-label="Выйти из аккаунта"
+          aria-label={t('signOutAccount')}
           onClick={onSignOut}
         >
           <LogOut size={18} />
@@ -47,6 +78,7 @@ export function NavigationSidebar({ isClosing, onClose, onSignOut, profile }) {
 }
 
 export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
+  const { language, t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState("");
 
@@ -84,7 +116,7 @@ export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
   }, []);
 
   const formatDate = (value) =>
-    new Intl.DateTimeFormat("ru-RU", {
+    new Intl.DateTimeFormat(language === 'en' ? "en-GB" : "ru-RU", {
       day: "numeric",
       month: "short",
       hour: "2-digit",
@@ -94,17 +126,17 @@ export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
   return (
     <aside
       className={`notifications-panel${isClosing ? " is-closing" : ""}`}
-      aria-label="Уведомления"
+      aria-label={t('notifications')}
     >
       <button
         className="drawer-close"
         type="button"
-        aria-label="Закрыть уведомления"
+        aria-label={`${t('close')} ${t('notifications').toLowerCase()}`}
         onClick={onClose}
       >
         <X size={19} />
       </button>
-      <h2>Уведомления</h2>
+      <h2>{t('notifications')}</h2>
       {notifications.map((notification) => (
         <article className="notification-item" key={notification.id}>
           {!notification.read && <i className="notification-dot" />}
@@ -118,7 +150,7 @@ export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
         </article>
       ))}
       {!notifications.length && !error && (
-        <p className="empty-state">Новых уведомлений пока нет.</p>
+        <p className="empty-state">{language === 'en' ? 'There are no new notifications yet.' : 'Новых уведомлений пока нет.'}</p>
       )}
       {error && <p className="form-status">{error}</p>}
       <button
@@ -126,7 +158,7 @@ export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
         type="button"
         onClick={onEnablePush}
       >
-        <BellRing size={16} /> Включить push-уведомления
+        <BellRing size={16} /> {language === 'en' ? 'Enable push notifications' : 'Включить push-уведомления'}
       </button>
     </aside>
   );

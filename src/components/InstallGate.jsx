@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Download, MonitorSmartphone, Share } from 'lucide-react'
+import { Download, Languages, MonitorSmartphone, Share } from 'lucide-react'
+import { useLanguage } from '../i18n'
 
 const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
 const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent)
 
 export function InstallGate({ children }) {
+  const { language, setLanguage, t } = useLanguage()
   const [deferredPrompt, setDeferredPrompt] = useState(() => window.__pwaInstallPrompt ?? null)
   const [installed, setInstalled] = useState(isStandalone)
   const [acknowledged, setAcknowledged] = useState(() => sessionStorage.getItem('pwa-install-acknowledged') === 'true')
@@ -39,15 +41,16 @@ export function InstallGate({ children }) {
   return (
     <main className="install-page">
       <section className="install-card">
+        <button className="language-button auth-language-button" type="button" onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}><Languages size={16} />{t('language')}</button>
         <div className="install-icon"><MonitorSmartphone size={30} /></div>
-        <p className="auth-kicker">ЗАКРЫТЫЙ ПОРТАЛ</p>
-        <h1>Добавьте приложение на экран</h1>
-        <p>Портал доступен после установки ZIEMER USER MEETING как приложения.</p>
+        <p className="auth-kicker">{t('portal')}</p>
+        <h1>{t('installTitle')}</h1>
+        <p>{t('installText')}</p>
         {isIos()
-          ? <div className="ios-instructions"><Share size={18} /><span>Нажмите «Поделиться», затем «На экран Домой».</span></div>
-          : <p className="install-hint">Нажмите кнопку ниже и подтвердите установку в браузере.</p>}
+          ? <div className="ios-instructions"><Share size={18} /><span>{t('ios')}</span></div>
+          : <p className="install-hint">{t('installHint')}</p>}
         <button className="primary-button" type="button" onClick={install}>
-          <Download size={17} /> {deferredPrompt ? 'Установить приложение' : isIos() ? 'Я добавил(а) приложение' : 'Продолжить после установки'}
+          <Download size={17} /> {deferredPrompt ? t('install') : isIos() ? t('installed') : t('continueInstall')}
         </button>
       </section>
     </main>

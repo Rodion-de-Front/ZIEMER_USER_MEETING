@@ -23,6 +23,7 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.94);
+  position: relative;
 }
 .logo {
   font:
@@ -40,8 +41,27 @@
 }
 .topbar-actions {
   display: flex;
+  flex: 1;
   align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
   gap: 7px;
+}
+.header-search-input {
+  width: clamp(120px, 18vw, 220px);
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, .72);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+.header-search-input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(207, 23, 23, .08);
 }
 .icon-button,
 .drawer-close,
@@ -417,6 +437,55 @@ footer .logo {
 .drawer > .logo {
   display: block;
   margin: 32px 0 47px;
+}
+.sidebar-search {
+  min-height: 46px;
+  margin: -24px 0 29px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fafafa;
+  color: #858585;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.sidebar-search:focus-within {
+  border-color: var(--red);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(207, 23, 23, .08);
+}
+.sidebar-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+.sidebar-search input::placeholder { color: #989898; }
+.sidebar-search button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #e9e9e9;
+  color: #757575;
+  cursor: pointer;
+}
+.sidebar-search button:hover { background: #dedede; color: var(--ink); }
+.sidebar-search-empty {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
 }
 .drawer h3 {
   margin: 0 0 13px;
@@ -1646,6 +1715,7 @@ footer .logo {
 @media (max-width: 760px) {
   .topbar { min-height: 64px; padding-inline: 16px; }
   .topbar-actions { gap: 6px; }
+  .header-search-input { width: clamp(88px, 18vw, 140px); padding-inline: 10px; }
   .icon-button { width: 36px; height: 36px; }
   .header-logo-link,
   .topbar > .logo { flex: 0 0 auto; }
@@ -1723,6 +1793,55 @@ footer .logo {
 .back-button:hover {
   background: #fff4f4;
   color: var(--ink);
+}
+
+.language-button {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 4px;
+  min-height: 34px;
+  padding: 0 9px;
+}
+.auth-brand-row { align-items: center; display: flex; justify-content: space-between; margin-bottom: 24px; }
+.auth-card .auth-brand-row .logo { margin-bottom: 0; }
+.auth-language-button { margin: 0; }
+.offline-banner {
+  background: #f9e5bd;
+  color: #633f00;
+  font-size: 13px;
+  margin: 0;
+  padding: 9px 20px;
+  text-align: center;
+}
+.search-panel {
+  animation: search-panel-enter .22s ease-out;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 12px 22px rgba(10, 28, 50, .12);
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-height: 72px;
+  overflow: hidden;
+  z-index: 30;
+}
+.search-panel-header { align-items: center; border-bottom: 1px solid var(--line); box-sizing: border-box; display: flex; justify-content: space-between; min-height: 56px; padding: 12px clamp(20px, 5vw, 62px); }
+.search-panel-header span { font-size: 13px; font-weight: 700; }
+.search-panel-header button { background: transparent; border: 0; color: var(--ink); padding: 4px; }
+.search-results { max-height: min(60vh, 470px); overflow: auto; padding: 8px; }
+.search-results a { border-radius: 10px; color: inherit; display: grid; gap: 5px; padding: 13px; text-decoration: none; }
+.search-results a:hover { background: #f1f6fb; }
+.search-results a span { color: var(--muted); font-size: 13px; line-height: 1.4; }
+@keyframes search-panel-enter {
+  from { opacity: 0; transform: translateY(-14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 760px) {

@@ -11,12 +11,15 @@ import { AdminPage } from './pages/AdminPage'
 import { BlockedPage } from './pages/BlockedPage'
 import { DetailPage } from './pages/DetailPage'
 import { HomePage } from './pages/HomePage'
+import { useLanguage } from './i18n'
 
 function Application({ profile, onSignOut }) {
+  const { t } = useLanguage()
   const [sidebar, setSidebar] = useState(null)
   const [isSidebarClosing, setIsSidebarClosing] = useState(false)
   const [hasUnread, setHasUnread] = useState(false)
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false)
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine)
   const openSidebar = (name) => {
     setIsSidebarClosing(false)
     setSidebar(name)
@@ -42,6 +45,15 @@ function Application({ profile, onSignOut }) {
     navigator.serviceWorker?.addEventListener('message', onPushMessage)
     return () => navigator.serviceWorker?.removeEventListener('message', onPushMessage)
   }, [])
+  useEffect(() => {
+    const updateConnection = () => setIsOnline(navigator.onLine)
+    window.addEventListener('online', updateConnection)
+    window.addEventListener('offline', updateConnection)
+    return () => {
+      window.removeEventListener('online', updateConnection)
+      window.removeEventListener('offline', updateConnection)
+    }
+  }, [])
 
   async function enablePush() {
     if (!('Notification' in window) || !('serviceWorker' in navigator)) return
@@ -55,6 +67,7 @@ function Application({ profile, onSignOut }) {
   return (
     <div className="app-shell">
       <ScrollToTop />
+      {!isOnline && <p className="offline-banner" role="status">{t('offline')}</p>}
       <Header onMenuOpen={() => openSidebar('navigation')} onNotificationsOpen={() => { setHasUnread(false); openSidebar('notifications') }} isAdmin={isAdmin} onSignOut={onSignOut} hasUnread={hasUnread} />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -81,13 +94,13 @@ function Application({ profile, onSignOut }) {
           if (event.target === event.currentTarget) setIsSignOutDialogOpen(false)
         }}>
           <section className="modal signout-modal" role="dialog" aria-modal="true" aria-labelledby="signout-dialog-title">
-            <button className="modal-close" type="button" aria-label="Закрыть" onClick={() => setIsSignOutDialogOpen(false)}><X size={19} /></button>
+            <button className="modal-close" type="button" aria-label={t('close')} onClick={() => setIsSignOutDialogOpen(false)}><X size={19} /></button>
             <div className="modal-icon"><LogOut size={23} /></div>
-            <h2 id="signout-dialog-title">Выйти из аккаунта?</h2>
-            <p>Для продолжения работы потребуется войти снова.</p>
+            <h2 id="signout-dialog-title">{t('signOutAccount')}?</h2>
+            <p>{t('language') === 'RU' ? 'You will need to sign in again to continue.' : 'Для продолжения работы потребуется войти снова.'}</p>
             <div className="signout-modal-actions">
-              <button className="button signout-cancel-button" type="button" onClick={() => setIsSignOutDialogOpen(false)}>Отмена</button>
-              <button className="button button-primary" type="button" onClick={onSignOut}>Выйти</button>
+              <button className="button signout-cancel-button" type="button" onClick={() => setIsSignOutDialogOpen(false)}>{t('language') === 'RU' ? 'Cancel' : 'Отмена'}</button>
+              <button className="button button-primary" type="button" onClick={onSignOut}>{t('signOut')}</button>
             </div>
           </section>
         </div>
@@ -105,6 +118,7 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { t } = useLanguage()
   const [session, setSession] = useState(undefined)
   const [profile, setProfile] = useState(null)
   const [isBlocked, setIsBlocked] = useState(false)
@@ -124,10 +138,10 @@ export default function App() {
     })
   }, [])
 
-  if (session === undefined) return <main className="loading-page">Загрузка…</main>
+  if (session === undefined) return <main className="loading-page">{t('loading')}</main>
   if (isBlocked) return <BlockedPage />
   if (!session) return <AuthPage />
-  if (!profile) return <main className="loading-page">Загрузка профиля…</main>
+  if (!profile) return <main className="loading-page">{t('loadingProfile')}</main>
 
   return (
     <BrowserRouter>

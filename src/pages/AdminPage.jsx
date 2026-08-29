@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, Ban, BellRing, Check, Search, Send, Users as UsersIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
+import { useLanguage } from '../i18n'
 
 export function AdminPage() {
+  const { language, t } = useLanguage()
   const [users, setUsers] = useState([])
   const [campaigns, setCampaigns] = useState([])
   const [activeTab, setActiveTab] = useState('users')
@@ -45,7 +47,7 @@ export function AdminPage() {
           scheduledFor: form.scheduledFor ? new Date(form.scheduledFor).toISOString() : undefined,
         }),
       })
-      setNotice(form.scheduledFor ? 'Рассылка запланирована.' : 'Push-уведомление отправляется на подписанные устройства.')
+      setNotice(form.scheduledFor ? (language === 'en' ? 'Campaign scheduled.' : 'Рассылка запланирована.') : (language === 'en' ? 'Push notification is being sent to subscribed devices.' : 'Push-уведомление отправляется на подписанные устройства.'))
       setCampaigns([campaign, ...campaigns])
       setForm({ title: '', body: '', scheduledFor: '' })
     } catch (error) {
@@ -65,7 +67,7 @@ export function AdminPage() {
         body: JSON.stringify({ blocked }),
       })
       setUsers((items) => items.map((item) => item.id === user.id ? { ...item, suspended_at: updatedUser.suspended_at } : item))
-      setNotice(blocked ? 'Пользователь заблокирован.' : 'Пользователь разблокирован.')
+      setNotice(blocked ? (language === 'en' ? 'User blocked.' : 'Пользователь заблокирован.') : (language === 'en' ? 'User unblocked.' : 'Пользователь разблокирован.'))
     } catch (error) {
       setNotice(error.message)
     } finally {
@@ -76,18 +78,18 @@ export function AdminPage() {
   return (
     <main className="admin-page">
       <div className="admin-heading">
-        <Link className="admin-back" to="/"><ArrowLeft size={18} /> Назад</Link>
-        <p className="auth-kicker">АДМИНИСТРИРОВАНИЕ</p>
-        <h1>Кабинет администратора</h1>
+        <Link className="admin-back" to="/"><ArrowLeft size={18} /> {t('back')}</Link>
+        <p className="auth-kicker">{t('admin')}</p>
+        <h1>{t('adminTitle')}</h1>
       </div>
-      <div className="admin-tabs" role="tablist" aria-label="Разделы кабинета">
-        <button className={activeTab === 'users' ? 'is-active' : ''} type="button" role="tab" aria-selected={activeTab === 'users'} onClick={() => setActiveTab('users')}><UsersIcon size={17} /> Пользователи <span>{users.length}</span></button>
-        <button className={activeTab === 'campaigns' ? 'is-active' : ''} type="button" role="tab" aria-selected={activeTab === 'campaigns'} onClick={() => setActiveTab('campaigns')}><BellRing size={17} /> Рассылки</button>
+      <div className="admin-tabs" role="tablist" aria-label={t('adminTitle')}>
+        <button className={activeTab === 'users' ? 'is-active' : ''} type="button" role="tab" aria-selected={activeTab === 'users'} onClick={() => setActiveTab('users')}><UsersIcon size={17} /> {t('users')} <span>{users.length}</span></button>
+        <button className={activeTab === 'campaigns' ? 'is-active' : ''} type="button" role="tab" aria-selected={activeTab === 'campaigns'} onClick={() => setActiveTab('campaigns')}><BellRing size={17} /> {t('campaigns')}</button>
       </div>
       {activeTab === 'users' ? (
         <section className="admin-panel users-panel admin-tab-content">
-          <div className="panel-title"><div><UsersIcon size={19} /><h2>Пользователи</h2></div><strong>{users.length}</strong></div>
-          <label className="search-field"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск: ФИО, почта, город…" /></label>
+          <div className="panel-title"><div><UsersIcon size={19} /><h2>{t('users')}</h2></div><strong>{users.length}</strong></div>
+          <label className="search-field"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('adminSearch')} /></label>
           {notice && <p className="form-status" role="status">{notice}</p>}
           <div className="users-table-wrap">
             <table className="users-table">
@@ -98,25 +100,25 @@ export function AdminPage() {
                 return <tr key={user.id}>
                   <td><strong>{user.full_name}</strong><span>{user.email}</span></td>
                   <td>{user.workplace}</td><td>{user.city}</td><td>{user.phone || '—'}</td>
-                  <td><span className={`user-status${isBlocked ? ' is-blocked' : ''}`}>{isBlocked ? 'Заблокирован' : 'Активен'}</span></td>
+                  <td><span className={`user-status${isBlocked ? ' is-blocked' : ''}`}>{isBlocked ? t('blockedStatus') : t('active')}</span></td>
                   <td><button className={`user-block-button${isBlocked ? ' is-blocked' : ''}`} type="button" disabled={isAdmin || updatingUserId === user.id} title={isAdmin ? 'Администраторов нельзя блокировать' : undefined} onClick={() => toggleUserBlock(user)}>
-                    {isBlocked ? <><Check size={15} /><span>Разблокировать</span></> : <><Ban size={15} /><span>Заблокировать</span></>}
+                    {isBlocked ? <><Check size={15} /><span>{t('unblock')}</span></> : <><Ban size={15} /><span>{t('block')}</span></>}
                   </button></td>
                 </tr>
               })}</tbody>
             </table>
-            {!filteredUsers.length && <p className="empty-state">Пользователи не найдены.</p>}
+            {!filteredUsers.length && <p className="empty-state">{t('usersEmpty')}</p>}
           </div>
         </section>
       ) : (
         <section className="admin-panel campaign-panel admin-tab-content">
-          <div className="panel-title"><div><BellRing size={19} /><h2>Push-рассылка</h2></div></div>
+          <div className="panel-title"><div><BellRing size={19} /><h2>{t('pushCampaign')}</h2></div></div>
           <form className="campaign-form" onSubmit={sendCampaign}>
-            <label>Заголовок<input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} required maxLength="100" /></label>
-            <label>Текст<textarea value={form.body} onChange={(event) => setForm({ ...form, body: event.target.value })} required maxLength="500" rows="4" /></label>
+            <label>{t('title')}<input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} required maxLength="100" /></label>
+            <label>{t('text')}<textarea value={form.body} onChange={(event) => setForm({ ...form, body: event.target.value })} required maxLength="500" rows="4" /></label>
             <label>Время отправки <span>оставьте пустым для отправки сейчас</span><input type="datetime-local" value={form.scheduledFor} onChange={(event) => setForm({ ...form, scheduledFor: event.target.value })} min={new Date().toISOString().slice(0, 16)} /></label>
             {notice && <p className="form-status">{notice}</p>}
-            <button className="primary-button" disabled={sending} type="submit"><Send size={16} /> {sending ? 'Сохранение…' : form.scheduledFor ? 'Запланировать' : 'Отправить сейчас'}</button>
+            <button className="primary-button" disabled={sending} type="submit"><Send size={16} /> {sending ? t('saving') : form.scheduledFor ? t('schedule') : t('sendNow')}</button>
           </form>
           <h3 className="campaign-history-title">Последние кампании</h3>
           <div className="campaign-history">{campaigns.map((campaign) => <article key={campaign.id}><strong>{campaign.title}</strong><p>{campaign.body}</p><span>{campaign.status === 'sent' ? `Доставлено: ${campaign.delivery_count}` : campaign.status === 'scheduled' ? 'Запланирована' : campaign.status}</span></article>)}</div>
