@@ -1808,9 +1808,14 @@ footer .logo {
   min-height: 34px;
   padding: 0 9px;
 }
-.auth-brand-row { align-items: center; display: flex; justify-content: space-between; margin-bottom: 24px; }
-.auth-card .auth-brand-row .logo { margin-bottom: 0; }
-.auth-language-button { margin: 0; }
+.page-language-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.92);
+}
 .offline-banner {
   background: #f9e5bd;
   color: #633f00;

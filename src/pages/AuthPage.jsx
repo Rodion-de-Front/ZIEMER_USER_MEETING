@@ -46,11 +46,9 @@ export function AuthPage() {
 
   return (
     <main className="auth-page">
+      <button className="language-button page-language-button" type="button" onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}>{t('language')}</button>
       <section className="auth-card">
-        <div className="auth-brand-row">
-          <Logo />
-          <button className="language-button auth-language-button" type="button" onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}>{t('language')}</button>
-        </div>
+        <Logo />
         <p className="auth-kicker">ZIEMER USER MEETING · 2026</p>
         <h1>{register ? t('createAccount') : t('welcome')}</h1>
         <p className="auth-subtitle">{register ? t('registerText') : t('loginText')}</p>

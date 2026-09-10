@@ -1,3 +1,5 @@
+name: ziemer
+
 services:
   postgres:
     image: postgres:17-alpine
@@ -40,7 +42,7 @@ services:
     depends_on:
       - api
     ports:
-      - "${PORT:-8080}:80"
+      - "${PORT:-6262}:80"
     restart: unless-stopped
 
   adminer:
@@ -48,7 +50,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: postgres
     ports:
-      - "${ADMINER_PORT:-5050}:8080"
+      - "${ADMINER_PORT:-6263}:8080"
     depends_on:
       postgres:
         condition: service_healthy

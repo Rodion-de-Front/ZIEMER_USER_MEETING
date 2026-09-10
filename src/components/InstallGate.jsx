@@ -40,8 +40,8 @@ export function InstallGate({ children }) {
 
   return (
     <main className="install-page">
+      <button className="language-button page-language-button" type="button" onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}><Languages size={16} />{t('language')}</button>
       <section className="install-card">
-        <button className="language-button auth-language-button" type="button" onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}><Languages size={16} />{t('language')}</button>
         <div className="install-icon"><MonitorSmartphone size={30} /></div>
         <p className="auth-kicker">{t('portal')}</p>
         <h1>{t('installTitle')}</h1>

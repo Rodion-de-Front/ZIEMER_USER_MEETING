@@ -22,13 +22,15 @@ docker compose -f docker-compose.dev.yml up --build
 - Password: значение `POSTGRES_PASSWORD` из `.env`
 - Database: значение `POSTGRES_DB` из `.env`
 
-Для production-режима (nginx + API + PostgreSQL + Adminer):
+Для production-режима (Docker: nginx + API + PostgreSQL + Adminer):
 
 ```bash
-docker compose up --build -d
+./deploy.sh
 ```
 
-Портал будет на `http://localhost:8080`.
+Скрипт делает `git pull` и пересобирает контейнеры. Портал слушает порт **6262**. На сервере рядом с Nidek / Femtomed / Sunkingdom домен `ziemergroup.ru` проксируется на `127.0.0.1:6262`.
+
+В `.env` задайте `PORT=6262` и `CORS_ORIGIN=https://ziemergroup.ru,https://www.ziemergroup.ru`.
 
 ## Данные и сброс
 
