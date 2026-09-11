@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { InstallGate } from './components/InstallGate'
+import { PushPermissionGate } from './components/PushPermissionGate'
 import { NavigationSidebar, NotificationsSidebar, SidebarBackdrop } from './components/Sidebars'
 import { api, clearToken, getToken, savePushSubscription } from './lib/api'
 import { AuthPage } from './pages/AuthPage'
@@ -33,6 +34,17 @@ function Application({ profile, onSignOut }) {
   }
   const isAdmin = profile.role === 'admin'
 
+  useEffect(() => {
+    if (!sidebar) return
+    const scrollY = window.scrollY
+    document.documentElement.classList.add('sidebar-open')
+    document.body.style.top = `-${scrollY}px`
+    return () => {
+      document.documentElement.classList.remove('sidebar-open')
+      document.body.style.top = ''
+      window.scrollTo(0, scrollY)
+    }
+  }, [sidebar])
   useEffect(() => {
     api('/notifications')
       .then(({ notifications }) => setHasUnread(Array.isArray(notifications) && notifications.some((notification) => !notification.read)))
@@ -140,13 +152,19 @@ export default function App() {
 
   if (session === undefined) return <main className="loading-page">{t('loading')}</main>
   if (isBlocked) return <BlockedPage />
-  if (!session) return <AuthPage />
-  if (!profile) return <main className="loading-page">{t('loadingProfile')}</main>
 
   return (
     <BrowserRouter>
       <InstallGate>
-        <Application profile={profile} onSignOut={() => { clearToken(); window.location.reload() }} />
+        {!session
+          ? <AuthPage />
+          : !profile
+            ? <main className="loading-page">{t('loadingProfile')}</main>
+            : (
+              <PushPermissionGate>
+                <Application profile={profile} onSignOut={() => { clearToken(); window.location.reload() }} />
+              </PushPermissionGate>
+            )}
       </InstallGate>
     </BrowserRouter>
   )

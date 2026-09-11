@@ -8,17 +8,24 @@ const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent)
 export function InstallGate({ children }) {
   const { language, setLanguage, t } = useLanguage()
   const [deferredPrompt, setDeferredPrompt] = useState(() => window.__pwaInstallPrompt ?? null)
-  const [installed, setInstalled] = useState(isStandalone)
-  const [acknowledged, setAcknowledged] = useState(() => sessionStorage.getItem('pwa-install-acknowledged') === 'true')
+  const [standalone, setStandalone] = useState(isStandalone)
+  const [installStarted, setInstallStarted] = useState(false)
 
   useEffect(() => {
     const onInstallReady = () => setDeferredPrompt(window.__pwaInstallPrompt)
-    const onInstalled = () => setInstalled(true)
+    const syncStandalone = () => setStandalone(isStandalone())
+    const displayMode = window.matchMedia('(display-mode: standalone)')
     window.addEventListener('pwa-install-ready', onInstallReady)
-    window.addEventListener('appinstalled', onInstalled)
+    window.addEventListener('appinstalled', syncStandalone)
+    window.addEventListener('focus', syncStandalone)
+    document.addEventListener('visibilitychange', syncStandalone)
+    displayMode.addEventListener?.('change', syncStandalone)
     return () => {
       window.removeEventListener('pwa-install-ready', onInstallReady)
-      window.removeEventListener('appinstalled', onInstalled)
+      window.removeEventListener('appinstalled', syncStandalone)
+      window.removeEventListener('focus', syncStandalone)
+      document.removeEventListener('visibilitychange', syncStandalone)
+      displayMode.removeEventListener?.('change', syncStandalone)
     }
   }, [])
 
@@ -28,15 +35,12 @@ export function InstallGate({ children }) {
       const { outcome } = await deferredPrompt.userChoice
       setDeferredPrompt(null)
       window.__pwaInstallPrompt = null
-      if (outcome === 'accepted') setInstalled(true)
+      if (outcome === 'accepted') setInstallStarted(true)
       return
     }
-    // iOS and some browsers cannot report installation state. Require an explicit acknowledgement.
-    sessionStorage.setItem('pwa-install-acknowledged', 'true')
-    setAcknowledged(true)
   }
 
-  if (installed || acknowledged) return children
+  if (standalone) return children
 
   return (
     <main className="install-page">
@@ -48,9 +52,9 @@ export function InstallGate({ children }) {
         <p>{t('installText')}</p>
         {isIos()
           ? <div className="ios-instructions"><Share size={18} /><span>{t('ios')}</span></div>
-          : <p className="install-hint">{t('installHint')}</p>}
-        <button className="primary-button" type="button" onClick={install}>
-          <Download size={17} /> {deferredPrompt ? t('install') : isIos() ? t('installed') : t('continueInstall')}
+          : <p className="install-hint">{installStarted ? t('openInstalledApp') : t('installHint')}</p>}
+        <button className="primary-button" type="button" onClick={install} disabled={!deferredPrompt}>
+          <Download size={17} /> {deferredPrompt ? t('install') : t('openInstalledApp')}
         </button>
       </section>
     </main>

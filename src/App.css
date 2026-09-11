@@ -6,6 +6,17 @@
   --wash: #fafafa;
   --line: #e8e8e8;
 }
+html.sidebar-open,
+html.sidebar-open body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+html.sidebar-open body {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+}
 .app-shell {
   width: min(100%, 1280px);
   min-height: 100svh;
@@ -56,7 +67,7 @@
   color: var(--ink);
   background: rgba(255, 255, 255, .72);
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   outline: none;
 }
 .header-search-input:focus {
@@ -423,6 +434,7 @@ footer .logo {
 }
 .drawer-backdrop {
   place-items: stretch end;
+  overscroll-behavior: contain;
 }
 .drawer {
   position: relative;
@@ -464,7 +476,7 @@ footer .logo {
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
 }
 .sidebar-search input::placeholder { color: #989898; }
 .sidebar-search button {
@@ -1184,7 +1196,7 @@ footer .logo {
   color: #333;
   background: #fff;
   font:
-    14px Inter,
+    16px Inter,
     sans-serif;
 }
 .feedback-form textarea {
@@ -1431,8 +1443,15 @@ footer .logo {
 .campaign-form label { display: grid; gap: 7px; font-size: 12px; font-weight: 700; }
 .auth-form label span,
 .campaign-form label span { color: var(--muted); font-weight: 400; }
+.campaign-form label.campaign-send-now {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
 .auth-form input,
-.campaign-form input,
+.campaign-form input:not([type="checkbox"]),
 .campaign-form textarea,
 .search-field input {
   width: 100%;
@@ -1444,9 +1463,17 @@ footer .logo {
   background: #fff;
 }
 .auth-form input:focus,
-.campaign-form input:focus,
+.campaign-form input:not([type="checkbox"]):focus,
 .campaign-form textarea:focus,
 .search-field:focus-within { border-color: var(--red); box-shadow: 0 0 0 3px rgba(207,23,23,.08); }
+.campaign-form .campaign-send-now input {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  accent-color: var(--red);
+  cursor: pointer;
+}
 .input-icon { position: relative; }
 .input-icon svg { position: absolute; top: 12px; left: 12px; color: #888; }
 .input-icon input { padding-left: 39px; }
@@ -1581,6 +1608,57 @@ footer .logo {
   color: inherit;
 }
 .empty-state { color: var(--muted); font-size: 13px; }
+.feedback-inbox-list { display: grid; gap: 12px; }
+.feedback-inbox-item {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(37,45,55,.06);
+}
+.feedback-inbox-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+.feedback-inbox-head strong,
+.feedback-inbox-head span { display: block; }
+.feedback-inbox-head span,
+.feedback-inbox-head time,
+.feedback-meta { color: var(--muted); font-size: 12px; }
+.feedback-rating {
+  margin: 12px 0 7px;
+  color: var(--red);
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+.feedback-inbox-item p {
+  margin: 0 0 13px;
+  color: var(--ink);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.feedback-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.feedback-meta span {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.feedback-meta span.is-sent {
+  color: #257347;
+  background: #e9f7ef;
+}
+.feedback-meta span.is-error {
+  color: #a11616;
+  background: #fff0f0;
+}
 .campaign-form textarea { resize: vertical; }
 .campaign-history-title { margin: 28px 0 12px; font-size: 13px; }
 .campaign-history { display: grid; gap: 8px; }
@@ -1614,7 +1692,11 @@ footer .logo {
   .topbar-actions { gap: 5px; }
   .signout-button { display: grid; }
   .admin-page { padding: 27px 18px; }
+  .admin-tabs { overflow-x: auto; }
+  .admin-tabs button { flex: 0 0 auto; padding-inline: 14px; }
   .admin-panel { padding: 17px; }
+  .feedback-inbox-head,
+  .feedback-meta { align-items: flex-start; flex-direction: column; }
 }
 
 /* Glass treatment */
@@ -1672,7 +1754,7 @@ footer .logo {
   background: #fff;
 }
 .auth-form input,
-.campaign-form input,
+.campaign-form input:not([type="checkbox"]),
 .campaign-form textarea,
 .search-field,
 .feedback-form input,

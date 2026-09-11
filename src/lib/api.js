@@ -40,7 +40,8 @@ export async function api(path, options = {}) {
 
 export async function savePushSubscription(registration) {
   if (!import.meta.env.VITE_VAPID_PUBLIC_KEY) throw new Error('VAPID-ключ не настроен')
-  const subscription = await registration.pushManager.subscribe({
+  const existingSubscription = await registration.pushManager.getSubscription()
+  const subscription = existingSubscription ?? await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
   })
