@@ -6,6 +6,9 @@ const isStandalone = () =>
   window.matchMedia("(display-mode: standalone)").matches ||
   window.navigator.standalone === true;
 const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isSafari = () =>
+  /safari/i.test(navigator.userAgent) &&
+  !/chrome|crios|fxios|edgios|android/i.test(navigator.userAgent);
 
 export function InstallGate({ children }) {
   const { language, setLanguage, t } = useLanguage();
@@ -15,6 +18,7 @@ export function InstallGate({ children }) {
   const [standalone, setStandalone] = useState(isStandalone);
   const [installStarted, setInstallStarted] = useState(false);
   const ios = isIos();
+  const manualInstallOnly = ios && isSafari();
 
   useEffect(() => {
     const onInstallReady = () => setDeferredPrompt(window.__pwaInstallPrompt);
@@ -77,9 +81,11 @@ export function InstallGate({ children }) {
               : t("installHint")}
           </p>
         )}
-        <button className="primary-button" type="button" onClick={install}>
-          <Download size={17} /> {t("install")}
-        </button>
+        {!manualInstallOnly && (
+          <button className="primary-button" type="button" onClick={install}>
+            <Download size={17} /> {t("install")}
+          </button>
+        )}
       </section>
     </main>
   );
