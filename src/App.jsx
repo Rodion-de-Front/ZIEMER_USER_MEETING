@@ -6,7 +6,7 @@ import { Header } from './components/Header'
 import { InstallGate } from './components/InstallGate'
 import { PushPermissionGate } from './components/PushPermissionGate'
 import { NavigationSidebar, NotificationsSidebar, SidebarBackdrop } from './components/Sidebars'
-import { api, clearToken, getToken, savePushSubscription } from './lib/api'
+import { api, clearToken, getToken } from './lib/api'
 import { AuthPage } from './pages/AuthPage'
 import { AdminPage } from './pages/AdminPage'
 import { BlockedPage } from './pages/BlockedPage'
@@ -67,15 +67,6 @@ function Application({ profile, onSignOut }) {
     }
   }, [])
 
-  async function enablePush() {
-    if (!('Notification' in window) || !('serviceWorker' in navigator)) return
-    const permission = await Notification.requestPermission()
-    if (permission !== 'granted') return
-    const registration = await navigator.serviceWorker.ready
-    await savePushSubscription(registration)
-    closeSidebar()
-  }
-
   return (
     <div className="app-shell">
       <ScrollToTop />
@@ -98,7 +89,7 @@ function Application({ profile, onSignOut }) {
         >
           {sidebar === 'navigation'
             ? <NavigationSidebar isClosing={isSidebarClosing} onClose={closeSidebar} onSignOut={requestSignOut} profile={profile} />
-            : <NotificationsSidebar isClosing={isSidebarClosing} onClose={closeSidebar} onEnablePush={enablePush} />}
+            : <NotificationsSidebar isClosing={isSidebarClosing} onClose={closeSidebar} />}
         </SidebarBackdrop>
       )}
       {isSignOutDialogOpen && (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BellRing, ChevronRight, LogOut, Search, X } from "lucide-react";
+import { ChevronRight, LogOut, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
 import { getConferenceContent } from "../data/conference";
@@ -77,7 +77,7 @@ export function NavigationSidebar({ isClosing, onClose, onSignOut, profile }) {
   );
 }
 
-export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
+export function NotificationsSidebar({ isClosing, onClose }) {
   const { language, t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState("");
@@ -153,13 +153,6 @@ export function NotificationsSidebar({ isClosing, onClose, onEnablePush }) {
         <p className="empty-state">{language === 'en' ? 'There are no new notifications yet.' : 'Новых уведомлений пока нет.'}</p>
       )}
       {error && <p className="form-status">{error}</p>}
-      <button
-        className="enable-push-button"
-        type="button"
-        onClick={onEnablePush}
-      >
-        <BellRing size={16} /> {language === 'en' ? 'Enable push notifications' : 'Включить push-уведомления'}
-      </button>
     </aside>
   );
 }
