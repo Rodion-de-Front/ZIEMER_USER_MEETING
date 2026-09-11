@@ -358,12 +358,33 @@ app.post("/api/admin/campaigns", auth, adminOnly, async (req, res) => {
     "insert into push_campaigns (title, body, scheduled_for, created_by) values ($1, $2, $3, $4) returning *",
     [parsed.data.title, parsed.data.body, scheduledFor, req.user.sub],
   );
-  if (!parsed.data.scheduledFor) sendDueCampaigns().catch(console.error);
-  res.status(201).json({ campaign: rows[0] });
+  let campaign = rows[0];
+  if (!parsed.data.scheduledFor) {
+    try {
+      await sendDueCampaigns({ requireConfig: true });
+      const { rows: updatedRows } = await pool.query(
+        "select * from push_campaigns where id = $1",
+        [campaign.id],
+      );
+      campaign = updatedRows[0] || campaign;
+    } catch (error) {
+      console.error("Failed to send push campaign immediately:", error);
+      return res.status(500).json({
+        error:
+          error.message === "VAPID keys are not configured"
+            ? "VAPID-ключи не настроены в API-контейнере"
+            : "Push-уведомление не отправлено",
+      });
+    }
+  }
+  res.status(201).json({ campaign });
 });
 
-async function sendDueCampaigns() {
-  if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) return;
+async function sendDueCampaigns({ requireConfig = false } = {}) {
+  if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+    if (requireConfig) throw new Error("VAPID keys are not configured");
+    return;
+  }
   const client = await pool.connect();
   try {
     await client.query("begin");
@@ -405,6 +426,9 @@ async function sendDueCampaigns() {
       await client.query(
         `update push_campaigns set status = 'sent', sent_at = now(), delivery_count = $2, failure_count = $3 where id = $1`,
         [campaign.id, delivered, failed],
+      );
+      console.log(
+        `Push campaign ${campaign.id}: delivered=${delivered}, failed=${failed}`,
       );
     }
     await client.query("commit");

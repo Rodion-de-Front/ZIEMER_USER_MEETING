@@ -21,7 +21,8 @@ export function DetailPage() {
   async function sendFeedback(event) {
     event.preventDefault()
     if (!rating) return
-    const formData = new FormData(event.currentTarget)
+    const formElement = event.currentTarget
+    const formData = new FormData(formElement)
     setSending(true)
     setError('')
     try {
@@ -34,7 +35,7 @@ export function DetailPage() {
         }),
       })
       setSent(true)
-      event.currentTarget.reset()
+      formElement.reset()
       setRating(0)
     } catch (feedbackError) {
       setError(feedbackError.message)

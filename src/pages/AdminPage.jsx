@@ -49,7 +49,9 @@ export function AdminPage() {
           scheduledFor: form.sendNow || !form.scheduledFor ? undefined : new Date(form.scheduledFor).toISOString(),
         }),
       })
-      setNotice(form.sendNow || !form.scheduledFor ? (language === 'en' ? 'Push notification is being sent to subscribed devices.' : 'Push-уведомление отправляется на подписанные устройства.') : (language === 'en' ? 'Campaign scheduled.' : 'Рассылка запланирована.'))
+      setNotice(form.sendNow || !form.scheduledFor
+        ? (language === 'en' ? `Push sent. Delivered: ${campaign.delivery_count}, failed: ${campaign.failure_count}.` : `Push отправлен. Доставлено: ${campaign.delivery_count}, ошибок: ${campaign.failure_count}.`)
+        : (language === 'en' ? 'Campaign scheduled.' : 'Рассылка запланирована.'))
       setCampaigns([campaign, ...campaigns])
       setForm({ title: '', body: '', scheduledFor: '', sendNow: true })
     } catch (error) {
