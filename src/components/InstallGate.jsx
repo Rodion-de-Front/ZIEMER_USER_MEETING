@@ -43,18 +43,6 @@ export function InstallGate({ children }) {
       if (outcome === "accepted") setInstallStarted(true);
       return;
     }
-    if (ios && navigator.share) {
-      try {
-        await navigator.share({
-          title: "ZIEMER USER MEETING",
-          url: window.location.href,
-        });
-      } catch {
-        // User can cancel the native share sheet; keep the install instructions visible.
-      }
-      setInstallStarted(true);
-      return;
-    }
     setInstallStarted(true);
   }
 
