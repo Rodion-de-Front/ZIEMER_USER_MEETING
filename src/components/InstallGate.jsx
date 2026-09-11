@@ -10,6 +10,7 @@ export function InstallGate({ children }) {
   const [deferredPrompt, setDeferredPrompt] = useState(() => window.__pwaInstallPrompt ?? null)
   const [standalone, setStandalone] = useState(isStandalone)
   const [installStarted, setInstallStarted] = useState(false)
+  const ios = isIos()
 
   useEffect(() => {
     const onInstallReady = () => setDeferredPrompt(window.__pwaInstallPrompt)
@@ -38,6 +39,7 @@ export function InstallGate({ children }) {
       if (outcome === 'accepted') setInstallStarted(true)
       return
     }
+    setInstallStarted(true)
   }
 
   if (standalone) return children
@@ -50,11 +52,11 @@ export function InstallGate({ children }) {
         <p className="auth-kicker">{t('portal')}</p>
         <h1>{t('installTitle')}</h1>
         <p>{t('installText')}</p>
-        {isIos()
+        {ios
           ? <div className="ios-instructions"><Share size={18} /><span>{t('ios')}</span></div>
-          : <p className="install-hint">{installStarted ? t('openInstalledApp') : t('installHint')}</p>}
-        <button className="primary-button" type="button" onClick={install} disabled={!deferredPrompt}>
-          <Download size={17} /> {deferredPrompt ? t('install') : t('openInstalledApp')}
+          : <p className="install-hint">{installStarted || !deferredPrompt ? t('openInstalledApp') : t('installHint')}</p>}
+        <button className="primary-button" type="button" onClick={install}>
+          <Download size={17} /> {t('install')}
         </button>
       </section>
     </main>
