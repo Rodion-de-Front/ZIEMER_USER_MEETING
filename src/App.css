@@ -1475,8 +1475,30 @@ footer .logo {
   cursor: pointer;
 }
 .input-icon { position: relative; }
-.input-icon svg { position: absolute; top: 12px; left: 12px; color: #888; }
+.input-icon .input-leading-icon { position: absolute; top: 12px; left: 12px; color: #888; }
 .input-icon input { padding-left: 39px; }
+.password-field input { padding-right: 42px; }
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 5px;
+  color: #666;
+  background: transparent;
+  cursor: pointer;
+}
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  color: var(--ink);
+  background: #f4f4f4;
+}
 .primary-button {
   padding: 13px 17px;
   display: inline-flex;
