@@ -14,6 +14,7 @@ const app = express();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const port = Number(process.env.PORT || 3000);
 const jwtSecret = process.env.JWT_SECRET;
+const pushTimeoutMs = Number(process.env.PUSH_TIMEOUT_MS || 10000);
 const feedbackEmailRecipient =
   process.env.FEEDBACK_EMAIL_RECIPIENT || "office@femtomed.ru";
 const feedbackEmailSubject =
@@ -34,6 +35,15 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(",") || true }));
 app.use(express.json({ limit: "100kb" }));
+app.use((req, res, next) => {
+  const startedAt = Date.now();
+  res.on("finish", () => {
+    console.log(
+      `${req.method} ${req.originalUrl} ${res.statusCode} ${Date.now() - startedAt}ms`,
+    );
+  });
+  next();
+});
 
 const registration = z.object({
   email: z.string().email().max(255),
@@ -353,6 +363,9 @@ app.post("/api/admin/campaigns", auth, adminOnly, async (req, res) => {
   const parsed = campaignSchema.safeParse(req.body);
   if (!parsed.success)
     return res.status(400).json({ error: "Проверьте данные рассылки" });
+  console.log(
+    `Creating push campaign: scheduled=${Boolean(parsed.data.scheduledFor)}`,
+  );
   const scheduledFor = parsed.data.scheduledFor || new Date().toISOString();
   const { rows } = await pool.query(
     "insert into push_campaigns (title, body, scheduled_for, created_by) values ($1, $2, $3, $4) returning *",
@@ -402,6 +415,9 @@ async function sendDueCampaigns({ requireConfig = false } = {}) {
          join users u on u.id = s.user_id
          where u.suspended_at is null`,
       );
+      console.log(
+        `Push campaign ${campaign.id}: sending to ${subscriptions.length} subscriptions`,
+      );
       let delivered = 0;
       let failed = 0;
       for (const subscription of subscriptions) {
@@ -413,10 +429,21 @@ async function sendDueCampaigns({ requireConfig = false } = {}) {
               body: campaign.body,
               url: "/",
             }),
+            {
+              timeout: pushTimeoutMs,
+              TTL: 60 * 60,
+            },
           );
           delivered += 1;
         } catch (error) {
           failed += 1;
+          console.error(
+            `Push campaign ${campaign.id}: subscription ${subscription.id} failed`,
+            {
+              statusCode: error.statusCode,
+              message: error.message,
+            },
+          );
           if ([404, 410].includes(error.statusCode))
             await client.query("delete from push_subscriptions where id = $1", [
               subscription.id,
