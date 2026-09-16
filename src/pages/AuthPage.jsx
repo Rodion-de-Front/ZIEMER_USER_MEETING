@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
 import { api, setToken } from '../lib/api'
 import { Logo } from '../components/Logo'
+import { Loader } from '../components/Loader'
 import { BlockedPage } from './BlockedPage'
 import { useLanguage } from '../i18n'
 
@@ -69,7 +70,7 @@ export function AuthPage() {
           <label>{t('password')}<div className="input-icon password-field"><LockKeyhole className="input-leading-icon" size={16} /><input name="password" type={passwordVisible ? 'text' : 'password'} value={form.password} onChange={update} required minLength="6" autoComplete={register ? 'new-password' : 'current-password'} /><button className="password-toggle" type="button" onClick={() => setPasswordVisible((visible) => !visible)} aria-label={passwordVisible ? t('hidePassword') : t('showPassword')}>{passwordVisible ? <EyeOff size={17} /> : <Eye size={17} />}</button></div></label>
           {register && <label>{t('confirmPassword')}<div className="input-icon password-field"><LockKeyhole className="input-leading-icon" size={16} /><input name="confirmPassword" type={confirmPasswordVisible ? 'text' : 'password'} value={form.confirmPassword} onChange={update} required minLength="6" autoComplete="new-password" /><button className="password-toggle" type="button" onClick={() => setConfirmPasswordVisible((visible) => !visible)} aria-label={confirmPasswordVisible ? t('hidePassword') : t('showPassword')}>{confirmPasswordVisible ? <EyeOff size={17} /> : <Eye size={17} />}</button></div></label>}
           {status && <p className="form-status" role="status">{status}</p>}
-          <button className="primary-button" disabled={loading} type="submit">{loading ? t('wait') : register ? t('register') : t('login')} <ArrowRight size={17} /></button>
+          <button className="primary-button" disabled={loading} type="submit">{loading ? <Loader label={t('wait')} /> : <>{register ? t('register') : t('login')} <ArrowRight size={17} /></>}</button>
         </form>
         <button className="text-button" type="button" onClick={() => { setMode(register ? 'login' : 'register'); setStatus('') }}>
           <span>{register ? t('hasAccount') : t('noAccount')}</span>{' '}

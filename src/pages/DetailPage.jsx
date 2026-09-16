@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getConferenceContent } from "../data/conference";
+import { Loader } from "../components/Loader";
 import { useLanguage } from "../i18n";
 import { api } from "../lib/api";
 
@@ -315,8 +316,7 @@ export function DetailPage() {
           </p>
         )}
         <button className="button button-primary" disabled={!rating || sending}>
-          {sending ? t("saving") : en ? "Send feedback" : "Отправить отзыв"}
-          <ArrowUpRight size={18} />
+          {sending ? <Loader label={t("saving")} /> : <>{en ? "Send feedback" : "Отправить отзыв"} <ArrowUpRight size={18} /></>}
         </button>
       </form>
     ),

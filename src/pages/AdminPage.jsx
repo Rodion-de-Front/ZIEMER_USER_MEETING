@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowLeft, Ban, BellRing, Check, MessageCircleHeart, Search, Send, Users as UsersIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { Loader } from '../components/Loader'
 import { api } from '../lib/api'
 import { useLanguage } from '../i18n'
 
@@ -13,6 +14,7 @@ export function AdminPage() {
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
   const [form, setForm] = useState({ title: '', body: '', scheduledFor: '', sendNow: true })
+  const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [updatingUserId, setUpdatingUserId] = useState('')
 
@@ -25,6 +27,8 @@ export function AdminPage() {
         setFeedbackMessages(Array.isArray(feedbackInbox.feedback) ? feedbackInbox.feedback : [])
       } catch (error) {
         setNotice(error.message)
+      } finally {
+        setLoading(false)
       }
     }
     load()
@@ -91,7 +95,11 @@ export function AdminPage() {
         <button className={activeTab === 'feedback' ? 'is-active' : ''} type="button" role="tab" aria-selected={activeTab === 'feedback'} onClick={() => setActiveTab('feedback')}><MessageCircleHeart size={17} /> {t('notifications')} <span>{feedbackMessages.length}</span></button>
         <button className={activeTab === 'campaigns' ? 'is-active' : ''} type="button" role="tab" aria-selected={activeTab === 'campaigns'} onClick={() => setActiveTab('campaigns')}><BellRing size={17} /> {t('campaigns')}</button>
       </div>
-      {activeTab === 'users' ? (
+      {loading ? (
+        <section className="admin-panel admin-loading-panel">
+          <Loader label={t('loading')} variant="panel" />
+        </section>
+      ) : activeTab === 'users' ? (
         <section className="admin-panel users-panel admin-tab-content">
           <div className="panel-title"><div><UsersIcon size={19} /><h2>{t('users')}</h2></div><strong>{users.length}</strong></div>
           <label className="search-field"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('adminSearch')} /></label>
@@ -107,7 +115,7 @@ export function AdminPage() {
                   <td>{user.workplace}</td><td>{user.city}</td><td>{user.phone || '—'}</td>
                   <td><span className={`user-status${isBlocked ? ' is-blocked' : ''}`}>{isBlocked ? t('blockedStatus') : t('active')}</span></td>
                   <td><button className={`user-block-button${isBlocked ? ' is-blocked' : ''}`} type="button" disabled={isAdmin || updatingUserId === user.id} title={isAdmin ? 'Администраторов нельзя блокировать' : undefined} onClick={() => toggleUserBlock(user)}>
-                    {isBlocked ? <><Check size={15} /><span>{t('unblock')}</span></> : <><Ban size={15} /><span>{t('block')}</span></>}
+                    {updatingUserId === user.id ? <Loader label={t('wait')} /> : isBlocked ? <><Check size={15} /><span>{t('unblock')}</span></> : <><Ban size={15} /><span>{t('block')}</span></>}
                   </button></td>
                 </tr>
               })}</tbody>
@@ -173,7 +181,7 @@ export function AdminPage() {
               </label>
             )}
             {notice && <p className="form-status">{notice}</p>}
-            <button className="primary-button" disabled={sending} type="submit"><Send size={16} /> {sending ? t('saving') : form.sendNow ? t('sendNow') : t('schedule')}</button>
+            <button className="primary-button" disabled={sending} type="submit">{sending ? <Loader label={t('saving')} /> : <><Send size={16} /> {form.sendNow ? t('sendNow') : t('schedule')}</>}</button>
           </form>
           <h3 className="campaign-history-title">Последние кампании</h3>
           <div className="campaign-history">{campaigns.map((campaign) => <article key={campaign.id}><strong>{campaign.title}</strong><p>{campaign.body}</p><span>{campaign.status === 'sent' ? `Доставлено: ${campaign.delivery_count}` : campaign.status === 'scheduled' ? 'Запланирована' : campaign.status}</span></article>)}</div>

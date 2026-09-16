@@ -1363,6 +1363,41 @@ footer .logo {
   background: linear-gradient(138deg, #aeb4ba, #737b84);
   clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
 }
+.loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+.loader-spinner {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: loader-spin .75s linear infinite;
+}
+.loader-page,
+.loader-panel {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+.loader-page {
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 25px 70px rgba(21,28,38,.12);
+}
+.loader-page .loader-spinner,
+.loader-panel .loader-spinner {
+  color: var(--red);
+}
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
 .auth-page::after {
   content: "Z";
   position: absolute;
@@ -1523,6 +1558,11 @@ footer .logo {
 .admin-button { display: grid; text-decoration: none; }
 .signout-button { display: none; }
 .admin-page { min-height: calc(100svh - 82px); padding: clamp(30px,5vw,72px); }
+.admin-loading-panel {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+}
 .admin-heading { margin: 0 0 31px; }
 .admin-back { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 26px; color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 700; }
 .admin-tabs {

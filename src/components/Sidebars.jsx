@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronRight, LogOut, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
+import { Loader } from "./Loader";
 import { getConferenceContent } from "../data/conference";
 import { api } from "../lib/api";
 import { useLanguage } from "../i18n";
@@ -81,6 +82,7 @@ export function NotificationsSidebar({ isClosing, onClose }) {
   const { language, t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -91,6 +93,9 @@ export function NotificationsSidebar({ isClosing, onClose }) {
       })
       .catch((loadError) => {
         if (active) setError(loadError.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
 
     function onPushMessage(event) {
@@ -137,7 +142,8 @@ export function NotificationsSidebar({ isClosing, onClose }) {
         <X size={19} />
       </button>
       <h2>{t('notifications')}</h2>
-      {notifications.map((notification) => (
+      {loading && <Loader label={t("loading")} variant="panel" />}
+      {!loading && notifications.map((notification) => (
         <article className="notification-item" key={notification.id}>
           {!notification.read && <i className="notification-dot" />}
           <div>
@@ -149,7 +155,7 @@ export function NotificationsSidebar({ isClosing, onClose }) {
           </div>
         </article>
       ))}
-      {!notifications.length && !error && (
+      {!loading && !notifications.length && !error && (
         <p className="empty-state">{language === 'en' ? 'There are no new notifications yet.' : 'Новых уведомлений пока нет.'}</p>
       )}
       {error && <p className="form-status">{error}</p>}

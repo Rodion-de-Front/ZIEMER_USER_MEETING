@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BellRing, Languages } from 'lucide-react'
 import { savePushSubscription } from '../lib/api'
+import { Loader } from './Loader'
 import { useLanguage } from '../i18n'
 
 const supportsPush = () => 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window
@@ -96,7 +97,7 @@ export function PushPermissionGate({ children }) {
         <p>{details}</p>
         {error && <p className="form-status" role="status">{error}</p>}
         <button className="primary-button" type="button" onClick={enablePush} disabled={isSaving || status === 'unsupported'}>
-          <BellRing size={17} /> {isSaving ? t('wait') : status === 'denied' ? t('pushCheckAgain') : t('pushEnable')}
+          {isSaving ? <Loader label={t('wait')} /> : <><BellRing size={17} /> {status === 'denied' ? t('pushCheckAgain') : t('pushEnable')}</>}
         </button>
       </section>
     </main>

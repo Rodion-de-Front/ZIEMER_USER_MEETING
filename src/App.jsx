@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { InstallGate } from './components/InstallGate'
+import { Loader } from './components/Loader'
 import { PushPermissionGate } from './components/PushPermissionGate'
 import { NavigationSidebar, NotificationsSidebar, SidebarBackdrop } from './components/Sidebars'
 import { api, clearToken, getToken } from './lib/api'
@@ -141,7 +142,7 @@ export default function App() {
     })
   }, [])
 
-  if (session === undefined) return <main className="loading-page">{t('loading')}</main>
+  if (session === undefined) return <main className="loading-page"><Loader label={t('loading')} variant="page" /></main>
   if (isBlocked) return <BlockedPage />
 
   return (
@@ -150,7 +151,7 @@ export default function App() {
         {!session
           ? <AuthPage />
           : !profile
-            ? <main className="loading-page">{t('loadingProfile')}</main>
+            ? <main className="loading-page"><Loader label={t('loadingProfile')} variant="page" /></main>
             : (
               <PushPermissionGate>
                 <Application profile={profile} onSignOut={() => { clearToken(); window.location.reload() }} />
