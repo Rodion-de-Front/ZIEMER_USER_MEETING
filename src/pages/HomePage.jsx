@@ -55,7 +55,7 @@ export function HomePage() {
             <MapPin size={14} />
             {copy.location}
             <br />
-            <span>Four Seasons Hotel</span>
+            <span>Radisson Collection Hotel</span>
           </div>
         </div>
       </section>

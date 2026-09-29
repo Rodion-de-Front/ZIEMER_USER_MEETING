@@ -4,10 +4,8 @@ import {
   ArrowUpRight,
   Download,
   Eye,
-  Image,
   MapPin,
   Play,
-  Sparkles,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getConferenceContent } from "../data/conference";
@@ -15,10 +13,13 @@ import { Loader } from "../components/Loader";
 import { useLanguage } from "../i18n";
 import { api } from "../lib/api";
 
+const yandexMapsVenueUrl =
+  "https://yandex.com/maps/org/radisson_collection_hotel_moscow/1152255963/?filter=alternate_vertical%3ARequestWindow&ll=37.577682%2C55.748751&mode=search&sctx=ZAAAAAgBEAAaKAoSCcO68e7I1EJAEYEjgQab3EtAEhIJU3sRbcfU4D8RyxMIO8Wqxz8iBgABAgMEBSgKOABAhZIHSAFqAnJ1nQHNzMw9oAEAqAEAvQE%2FlLp5wgELsd7kzM8F24%2B4pQSCAiXQs9C%2B0YHRgtC40L3QuNGG0LAgwqvQo9C60YDQsNC40L3QsMK7igIAkgIAmgIMZGVza3RvcC1tYXBz2gIoChIJuoWuRKDIQkARVoT8qurfS0ASEgkAlC2SdqOnPxEAmEuqtpuQP%2BACAQ%3D%3D&sll=37.568949%2C55.748751&sspn=0.063507%2C0.022311&text=%D0%B3%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B8%D1%86%D0%B0%20%C2%AB%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0%C2%BB&z=14.92";
+
 export function DetailPage() {
   const { pageId } = useParams();
   const { language, t } = useLanguage();
-  const { pageContent, schedule } = getConferenceContent(language);
+  const { pageContent, schedule, programMeta, cultureSchedule } = getConferenceContent(language);
   const item = pageContent[pageId];
   const [sent, setSent] = useState(false);
   const [rating, setRating] = useState(0);
@@ -27,6 +28,31 @@ export function DetailPage() {
   if (!item) return null;
   const Icon = item.icon;
   const en = language === "en";
+  const renderSchedule = (items) => (
+    <div className="schedule">
+      {items.map((entry) => (
+        <article key={entry.time}>
+          <time>{entry.time}</time>
+          <div>
+            <strong>{entry.title}</strong>
+            {entry.speaker && (
+              <span>
+                {entry.speaker}
+                {entry.note ? ` · ${entry.note}` : ""}
+              </span>
+            )}
+            {!entry.speaker && entry.note && <span>{entry.note}</span>}
+            {entry.speakers?.map((speaker) => (
+              <span key={speaker.name}>
+                {speaker.name}
+                {speaker.note ? ` · ${speaker.note}` : ""}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
   const block = (title, children) => (
     <section className="detail-block">
       <h3>{title}</h3>
@@ -68,44 +94,45 @@ export function DetailPage() {
             <small>{en ? "Friday · Moscow" : "пятница · Москва"}</small>
           </div>
         </div>
-        <div className="schedule">
-          {schedule.map(([time, title, person]) => (
-            <article key={time}>
-              <time>{time}</time>
-              <div>
-                <strong>{title}</strong>
-                <span>{person}</span>
-              </div>
-            </article>
+        <div className="program-meta">
+          {programMeta.map((meta) => (
+            <p key={meta.label}>
+              <strong>{meta.label}</strong>
+              {meta.value}
+            </p>
           ))}
         </div>
+        {renderSchedule(schedule)}
       </>
     ),
     venue: (
       <>
         <div className="venue-card">
           <p className="eyebrow">{en ? "Meeting venue" : "Место встречи"}</p>
-          <h3>Four Seasons Hotel Moscow</h3>
+          <h3>Radisson Collection Hotel</h3>
           <p>
-            {en ? "2 Okhotny Ryad St." : "ул. Охотный Ряд, 2"}
+            {en
+              ? "Kutuzovsky Prospekt, 2/1, building 1"
+              : "Кутузовский проспект, 2/1, стр. 1"}
             <br />
-            Moscow, Russia
+            {en ? "Hotel Ukraine, Moscow" : "гостиница «Украина», Москва"}
           </p>
           <div className="venue-pin">
             <MapPin size={19} />{" "}
             {en
-              ? "Tchaikovsky conference hall, floor 2"
-              : "Конференц-зал «Чайковский», 2 этаж"}
+              ? "Collection Lounge hall"
+              : "Зал «Коллекшен Лаунж»"}
           </div>
         </div>
-        {block(
-          en ? "How to get there" : "Как добраться",
-          <p>
-            {en
-              ? "The nearest metro station is Okhotny Ryad, exit 7. Enter through the main lobby; the ZIEMER registration desk is to the right of the entrance."
-              : "Ближайшая станция метро — «Охотный Ряд», выход № 7. Вход через главный вестибюль; стойка регистрации ZIEMER находится справа от входа."}
-          </p>,
-        )}
+        <a
+          className="button button-primary venue-map-button"
+          href={yandexMapsVenueUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {en ? "Open in Yandex Maps" : "Смотреть в Яндекс Картах"}
+          <ArrowUpRight size={18} />
+        </a>
       </>
     ),
     info: (
@@ -114,95 +141,57 @@ export function DetailPage() {
           en ? "Registration" : "Регистрация",
           <p>
             {en
-              ? "Registration opens at 09:30. To receive your badge, state your surname and show your personal link."
-              : "Стойка регистрации открывается в 09:30. Для получения бейджа назовите фамилию и покажите персональную ссылку."}
+              ? "Registration and welcome coffee run from 09:00 to 10:00 at Radisson Collection Hotel."
+              : "Регистрация и приветственный кофе пройдут с 09:00 до 10:00 в Radisson Collection Hotel."}
           </p>,
         )}
         {block(
           en ? "Organiser contacts" : "Контакты организаторов",
           <div className="contact-list">
-            <a href="mailto:zum@femtomed.ru">zum@femtomed.ru</a>
-            <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+            <span>
+              {en
+                ? "Your FEMTOMED manager"
+                : "Ваш менеджер компании «ФЕМТОМЕД»"}
+            </span>
+            <a href="tel:+79035126837">
+              {en
+                ? "Ekaterina Cherkashina: +7 (903) 512-68-37"
+                : "Черкашина Екатерина: +7 (903) 512-68-37"}
+            </a>
           </div>,
         )}
       </>
     ),
     culture: (
       <>
-        <div className="culture-cover">
-          <Sparkles size={35} />
-          <span>{en ? "19:30 · 9 October" : "19:30 · 9 октября"}</span>
-          <h3>ZIEMER {en ? "evening" : "Вечер"}</h3>
-          <p>
-            {en
-              ? "Dinner, music and conversations with colleagues"
-              : "Ужин, музыка и общение в кругу коллег"}
-          </p>
+        <div className="program-date">
+          <span>09</span>
+          <div>
+            <strong>{en ? "OCTOBER 2026" : "ОКТЯБРЯ 2026"}</strong>
+            <small>{en ? "Friday · Butman Jazz Club" : "пятница · Джаз-клуб Бутмана"}</small>
+          </div>
         </div>
-        {block(
-          en ? "Evening programme" : "Программа вечера",
-          <ul className="plain-list">
-            <li>
-              {en
-                ? "19:30 — Guest arrival and welcome drink"
-                : "19:30 — Сбор гостей и welcome drink"}
-            </li>
-            <li>
-              {en ? "20:00 — Welcome and dinner" : "20:00 — Приветствие и ужин"}
-            </li>
-            <li>
-              {en ? "21:30 — Music programme" : "21:30 — Музыкальная программа"}
-            </li>
-          </ul>,
-        )}
+        {renderSchedule(cultureSchedule)}
       </>
     ),
     recording: (
-      <div className="media-grid">
-        {(en
-          ? ["ZUM 2026 opening", "FEMTO Z8 NEO", "CLEAR Supra"]
-          : ["Открытие ZUM 2026", "FEMTO Z8 NEO", "CLEAR Supra"]
-        ).map((name) => (
-          <article className="video-card" key={name}>
-            <div className="media-thumb">
-              <Play size={26} />
-            </div>
-            <strong>{name}</strong>
-            <small>
-              {en
-                ? "Recording will be available after the event"
-                : "Запись станет доступна после мероприятия"}
-            </small>
-          </article>
-        ))}
-      </div>
+      <section className="materials-placeholder">
+        <Play size={28} />
+        <p>
+          {en
+            ? "Materials will appear after the event"
+            : "Материалы появятся после мероприятия"}
+        </p>
+      </section>
     ),
     photos: (
-      <div className="gallery">
-        {(en
-          ? [
-              "Participant registration",
-              "Business programme",
-              "ZIEMER evening",
-              "Colleague networking",
-              "Round table",
-              "ZIEMER team",
-            ]
-          : [
-              "Регистрация участников",
-              "Деловая программа",
-              "Вечер ZIEMER",
-              "Общение коллег",
-              "Круглый стол",
-              "Команда ZIEMER",
-            ]
-        ).map((name, index) => (
-          <article key={name} className={`gallery-item gallery-${index + 1}`}>
-            <Image size={25} />
-            <span>{name}</span>
-          </article>
-        ))}
-      </div>
+      <section className="materials-placeholder">
+        <p>
+          {en
+            ? "Materials will appear after the event"
+            : "Материалы появятся после мероприятия"}
+        </p>
+      </section>
     ),
     materials: (
       <div className="downloads">

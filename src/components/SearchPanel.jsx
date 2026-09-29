@@ -5,18 +5,25 @@ import { getConferenceContent } from '../data/conference'
 import { useLanguage } from '../i18n'
 
 const extraText = {
-  ru: { program: 'регистрация кофе открытие клинические случаи обед круглый стол', venue: 'отель москва охотный ряд метро парковка', info: 'регистрация бейдж контакты организаторы', culture: 'ужин музыка вечер дресс-код', recording: 'выступления видео запись', photos: 'галерея фотографии', materials: 'видео презентации файлы скачать', feedback: 'отзыв оценка пожелания' },
-  en: { program: 'registration coffee opening clinical cases lunch round table', venue: 'hotel moscow okhotny ryad metro parking', info: 'registration badge contacts organisers', culture: 'dinner music evening dress code', recording: 'talks video recording', photos: 'gallery photos', materials: 'videos presentations files download', feedback: 'feedback rating suggestions' },
+  ru: { program: 'регистрация кофе научная программа доклады спикеры инженеры обед мастер-класс aquariuz clear supra', venue: 'отель москва radisson collection украина кутузовский коллекшен лаунж указатели', info: 'регистрация контакты организаторы менеджер фемтомед черкашина екатерина телефон', culture: 'джаз-клуб бутмана ужин музыка группа ва-банкъ сбор', recording: 'выступления видео запись', photos: 'галерея фотографии', materials: 'видео презентации файлы скачать', feedback: 'отзыв оценка пожелания' },
+  en: { program: 'registration coffee scientific programme talks speakers engineers lunch masterclass aquariuz clear supra', venue: 'hotel moscow radisson collection ukraine kutuzovsky collection lounge signs', info: 'registration contacts organisers manager femtomed cherkashina ekaterina phone', culture: 'butman jazz club dinner music va-bank band gathering', recording: 'talks video recording', photos: 'gallery photos', materials: 'videos presentations files download', feedback: 'feedback rating suggestions' },
 }
 
 export function SearchPanel({ query, onClose }) {
   const { language, t } = useLanguage()
-  const { sections, pageContent } = getConferenceContent(language)
+  const { sections, pageContent, schedule = [], cultureSchedule = [], programMeta = [] } = getConferenceContent(language)
   const needle = query.trim().toLocaleLowerCase(language)
+  const toSearchText = (items) => items
+    .flatMap((item) => [item.time, item.title, item.speaker, item.note, item.label, item.value, ...(item.speakers || []).flatMap((speaker) => [speaker.name, speaker.note])])
+    .filter(Boolean)
+    .join(' ')
+  const programSearchText = toSearchText([...schedule, ...programMeta])
+  const cultureSearchText = toSearchText(cultureSchedule)
   const results = !needle ? [] : sections
     .map((section) => {
       const page = pageContent[section.id]
-      const text = `${section.title} ${section.caption} ${page.title} ${page.text} ${extraText[language][section.id]}`.toLocaleLowerCase(language)
+      const extra = `${extraText[language][section.id]} ${section.id === 'program' ? programSearchText : section.id === 'culture' ? cultureSearchText : ''}`
+      const text = `${section.title} ${section.caption} ${page.title} ${page.text} ${extra}`.toLocaleLowerCase(language)
       const words = needle.split(/\s+/)
       const score = words.reduce((total, word) => total + (section.title.toLocaleLowerCase(language).includes(word) ? 5 : 0) + (page.text.toLocaleLowerCase(language).includes(word) ? 2 : 0) + (text.includes(word) ? 1 : 0), 0)
       return { ...section, text: page.text, score }

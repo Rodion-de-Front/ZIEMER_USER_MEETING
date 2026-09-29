@@ -179,6 +179,8 @@ html.sidebar-open body {
 .hero-location {
   padding-left: 16px;
   border-left: 1px solid #ccc;
+  color: var(--ink);
+  font-weight: 700;
   line-height: 1.45;
 }
 .hero-location svg {
@@ -187,7 +189,7 @@ html.sidebar-open body {
   margin-right: 4px;
 }
 .hero-location span {
-  color: #999;
+  color: var(--ink);
 }
 .ring {
   display: none;
@@ -874,7 +876,7 @@ footer .logo {
   color: var(--red);
 }
 .detail-hero {
-  padding: 61px clamp(20px, 7vw, 100px) 56px;
+  padding: 61px clamp(20px, 7vw, 100px) 34px;
   background: #f7f7f7;
   border-bottom: 1px solid var(--line);
 }
@@ -904,7 +906,7 @@ footer .logo {
 }
 .detail-content {
   max-width: 980px;
-  padding: 54px clamp(20px, 7vw, 100px) 90px;
+  padding: 28px clamp(20px, 7vw, 100px) 90px;
 }
 .detail-block {
   padding: 28px 0;
@@ -949,12 +951,31 @@ footer .logo {
   color: #888;
   font-size: 12px;
 }
+.program-meta {
+  display: grid;
+  gap: 14px;
+  padding: 0 0 24px;
+}
+.program-meta p {
+  margin: 0;
+  color: #606060;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.program-meta strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 .schedule {
   border-top: 1px solid var(--line);
 }
 .schedule article {
   display: grid;
-  grid-template-columns: 90px 1fr;
+  grid-template-columns: 108px 1fr;
   gap: 19px;
   padding: 19px 0;
   border-bottom: 1px solid var(--line);
@@ -962,8 +983,9 @@ footer .logo {
 .schedule time {
   color: var(--red);
   font:
-    700 16px Arial,
+    700 15px/1.25 Arial,
     sans-serif;
+  white-space: nowrap;
 }
 .schedule strong,
 .schedule span {
@@ -971,11 +993,13 @@ footer .logo {
 }
 .schedule strong {
   font-size: 15px;
+  line-height: 1.35;
 }
 .schedule span {
   margin-top: 5px;
   color: #818181;
   font-size: 12px;
+  line-height: 1.45;
 }
 .venue-card {
   padding: 34px;
@@ -1009,6 +1033,12 @@ footer .logo {
 }
 .venue-pin svg {
   color: #f15c5c;
+}
+.venue-map-button {
+  width: fit-content;
+  margin-top: 18px;
+  color: #fff;
+  text-decoration: none;
 }
 .contact-list {
   display: grid;
@@ -1058,6 +1088,27 @@ footer .logo {
   border-bottom: 1px solid var(--line);
   color: #555;
   font-size: 14px;
+}
+.materials-placeholder {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 34px;
+  border: 1px dashed #d7d7d7;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--muted);
+  text-align: center;
+}
+.materials-placeholder svg {
+  color: var(--red);
+}
+.materials-placeholder p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
 }
 .media-grid {
   display: grid;
@@ -1861,11 +1912,11 @@ footer .logo {
   .header-logo-link,
   .topbar > .logo { flex: 0 0 auto; }
   .logo { font-size: 21px; }
-  .detail-hero { padding: 32px 20px 30px; }
+  .detail-hero { padding: 32px 20px 22px; }
   .detail-hero h1 { font-size: clamp(34px, 10vw, 46px); line-height: 0.98; }
   .detail-hero > p:last-child,
   .detail-block p { color: var(--ink); font-size: 15px; line-height: 1.6; }
-  .detail-content { padding: 24px 20px 52px; }
+  .detail-content { padding: 16px 20px 52px; }
   .detail-block { padding: 24px 20px; margin-bottom: 14px; }
   .detail-block h3 { font-size: 21px; }
   .venue-card,
@@ -1875,7 +1926,7 @@ footer .logo {
   .venue-pin,
   .culture-cover p { font-size: 14px; line-height: 1.5; }
   .program-date > span { font-size: 62px; }
-  .schedule article { grid-template-columns: 68px minmax(0, 1fr); gap: 12px; }
+  .schedule article { grid-template-columns: 86px minmax(0, 1fr); gap: 12px; }
   .schedule strong { font-size: 14px; }
   .schedule span,
   .program-date small,
@@ -1893,6 +1944,11 @@ footer .logo {
 .video-card small,
 .notification-item time,
 .rating-captions { color: #5f5f5f; }
+.hero-bottom .hero-location,
+.hero-bottom .hero-location span {
+  color: var(--ink);
+  font-weight: 700;
+}
 .hero-section h1 { line-height: 0.98; }
 .detail-hero h1 { line-height: 1.04; }
 .detail-hero > p:last-child,
