@@ -18,7 +18,7 @@ export function HomePage() {
           inPerson: "In person",
           nav: "Navigation",
           title: "All about the meeting",
-          sections: "08 SECTIONS",
+          sections: "09 SECTIONS",
           aria: "Key information",
           navAria: "Meeting sections",
         }
@@ -30,7 +30,7 @@ export function HomePage() {
           inPerson: "Очно",
           nav: "Навигация",
           title: "Всё о встрече",
-          sections: "08 РАЗДЕЛОВ",
+          sections: "09 РАЗДЕЛОВ",
           aria: "Ключевая информация",
           navAria: "Разделы встречи",
         };
@@ -42,7 +42,7 @@ export function HomePage() {
           {copy.meta}
         </div>
         <h1>
-          <em>ZIEMER</em>
+          <em>ZIEMER CLUB</em>
           <br />
           USER MEETING
         </h1>

@@ -19,7 +19,8 @@ const yandexMapsVenueUrl =
 export function DetailPage() {
   const { pageId } = useParams();
   const { language, t } = useLanguage();
-  const { pageContent, schedule, programMeta, cultureSchedule } = getConferenceContent(language);
+  const { pageContent, schedule, programMeta, cultureSchedule } =
+    getConferenceContent(language);
   const item = pageContent[pageId];
   const [sent, setSent] = useState(false);
   const [rating, setRating] = useState(0);
@@ -119,9 +120,7 @@ export function DetailPage() {
           </p>
           <div className="venue-pin">
             <MapPin size={19} />{" "}
-            {en
-              ? "Collection Lounge hall"
-              : "Зал «Коллекшен Лаунж»"}
+            {en ? "Collection Lounge hall" : "Зал «Коллекшен Лаунж»"}
           </div>
         </div>
         <a
@@ -137,6 +136,12 @@ export function DetailPage() {
     ),
     info: (
       <>
+        <p className="info-highlight">
+          {en
+            ? "On 9 October at ZUM 2026, for operational questions please call Olga Bukina: "
+            : "09 октября на ZUM 2026 по оперативным вопросам звоните, пожалуйста, Ольге Букиной: "}
+          <a href="tel:+79033284903">+79033284903</a>
+        </p>
         {block(
           en ? "Registration" : "Регистрация",
           <p>
@@ -153,11 +158,18 @@ export function DetailPage() {
                 ? "Your FEMTOMED manager"
                 : "Ваш менеджер компании «ФЕМТОМЕД»"}
             </span>
-            <a href="tel:+79035126837">
-              {en
-                ? "Ekaterina Cherkashina: +7 (903) 512-68-37"
-                : "Черкашина Екатерина: +7 (903) 512-68-37"}
-            </a>
+            <div className="contact-person">
+              <small>{en ? "Until 7 October" : "До 07 октября"}</small>
+              <strong>
+                {en ? "Ekaterina Cherkashina" : "Черкашина Екатерина"}
+              </strong>
+              <a href="tel:+79035126837">+79035126837</a>
+            </div>
+            <div className="contact-person">
+              <small>{en ? "8–9 October" : "08–09 октября"}</small>
+              <strong>{en ? "Olga Bukina" : "Букина Ольга"}</strong>
+              <a href="tel:+79033284903">+79033284903</a>
+            </div>
           </div>,
         )}
       </>
@@ -168,7 +180,9 @@ export function DetailPage() {
           <span>09</span>
           <div>
             <strong>{en ? "OCTOBER 2026" : "ОКТЯБРЯ 2026"}</strong>
-            <small>{en ? "Friday · Butman Jazz Club" : "пятница · Джаз-клуб Бутмана"}</small>
+            <small>
+              {en ? "Friday · Butman Jazz Club" : "пятница · Джаз-клуб Бутмана"}
+            </small>
           </div>
         </div>
         {renderSchedule(cultureSchedule)}
@@ -193,29 +207,86 @@ export function DetailPage() {
         </p>
       </section>
     ),
+    abstracts: (
+      <section className="materials-placeholder">
+        <p>
+          {en
+            ? "They will be available after the event. Follow the updates"
+            : "Материалы — будут доступны после мероприятия. Следите за обновлениями"}
+        </p>
+      </section>
+    ),
     materials: (
-      <div className="downloads">
-        {(en
-          ? [
-              "ZUM presentation",
-              "ZIEMER solutions catalogue",
-              "Bouquet layouts",
-              "Video: CLEAR Supra",
-            ]
-          : [
-              "Презентация ZUM",
-              "Каталог решений ZIEMER",
-              "Макеты букетов",
-              "Видео: CLEAR Supra",
-            ]
-        ).map((name) => (
-          <button key={name}>
-            <span className="download-type">PDF</span>
-            <strong>{name}</strong>
-            <Download size={18} />
-          </button>
-        ))}
-      </div>
+      <>
+        <div className="downloads">
+          {[
+            {
+              title: "AQUARIUZ",
+              href: "/materials/aquariuz.pdf",
+              download: "AQUARIUZ.pdf",
+            },
+            {
+              title: "FLOW SUITE",
+              href: "/materials/flow-suite.pdf",
+              download: "FLOW SUITE.pdf",
+            },
+            {
+              title: en ? "Book of values" : "КНИГА ЦЕННОСТЕЙ",
+              href: "/materials/ziemer-values.pdf",
+              download: en ? "Book of values.pdf" : "Книга ценностей.pdf",
+            },
+            {
+              title: "OPTO XLINK",
+              href: "/materials/opto-xlink.pdf",
+              download: "OPTO XLINK.pdf",
+            },
+            {
+              title: "FERRARA RING",
+              href: "/materials/ferrara-ring.pdf",
+              download: "FERRARA RING.pdf",
+            },
+            {
+              title: en ? "CLEAR for patients" : "CLEAR ДЛЯ ПАЦИЕНТОВ",
+              href: "/materials/clear-for-patients.pdf",
+              download: en
+                ? "CLEAR for patients.pdf"
+                : "CLEAR для пациентов.pdf",
+            },
+            {
+              title: en ? "Information on the website" : "Информация на сайте",
+              href: "https://femtomed.ru",
+              external: true,
+            },
+          ].map((item) => (
+            <a
+              key={item.title}
+              href={item.href}
+              {...(item.external
+                ? { target: "_blank", rel: "noreferrer" }
+                : { download: item.download })}
+            >
+              <span className="download-type">
+                {item.external ? "WEB" : "PDF"}
+              </span>
+              <strong>{item.title}</strong>
+              {item.external ? (
+                <ArrowUpRight size={18} />
+              ) : (
+                <Download size={18} />
+              )}
+            </a>
+          ))}
+        </div>
+        <p className="materials-note">
+          {en
+            ? "Further information and videos can be downloaded on "
+            : "Дополнительную информацию и видео можно скачать на сайте "}
+          <a href="https://femtomed.ru" target="_blank" rel="noreferrer">
+            femtomed.ru
+          </a>
+          .
+        </p>
+      </>
     ),
     feedback: (
       <form className="feedback-form" onSubmit={sendFeedback}>
@@ -305,7 +376,14 @@ export function DetailPage() {
           </p>
         )}
         <button className="button button-primary" disabled={!rating || sending}>
-          {sending ? <Loader label={t("saving")} /> : <>{en ? "Send feedback" : "Отправить отзыв"} <ArrowUpRight size={18} /></>}
+          {sending ? (
+            <Loader label={t("saving")} />
+          ) : (
+            <>
+              {en ? "Send feedback" : "Отправить отзыв"}{" "}
+              <ArrowUpRight size={18} />
+            </>
+          )}
         </button>
       </form>
     ),
