@@ -32,6 +32,7 @@ html.sidebar-open body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 14px;
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.94);
   position: relative;
@@ -50,7 +51,7 @@ html.sidebar-open body {
 }
 .topbar-actions {
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: flex-end;
   min-width: 0;
@@ -1984,6 +1985,14 @@ footer .logo {
   .video-card small { color: var(--ink); }
 }
 
+@media (max-width: 360px) {
+  .topbar { gap: 10px; padding-inline: 12px; }
+  .topbar-actions { gap: 4px; }
+  .logo { font-size: 19px; }
+  .icon-button { width: 32px; height: 32px; }
+  .language-button { min-height: 32px; padding-inline: 7px; }
+}
+
 /* Legible secondary copy and comfortable text spacing across the public UI. */
 .hero-meta,
 .hero-bottom,
@@ -2053,6 +2062,7 @@ footer .logo {
   font-size: 11px;
   font-weight: 700;
   gap: 4px;
+  flex: 0 0 auto;
   min-height: 34px;
   padding: 0 9px;
 }
