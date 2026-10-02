@@ -212,7 +212,7 @@ export function DetailPage() {
         <p>
           {en
             ? "They will be available after the event. Follow the updates"
-            : "Материалы — будут доступны после мероприятия. Следите за обновлениями"}
+            : "Материалы будут доступны после мероприятия. Следите за обновлениями"}
         </p>
       </section>
     ),
