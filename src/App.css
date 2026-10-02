@@ -1647,6 +1647,21 @@ footer .logo {
   font-weight: 700;
 }
 .primary-button:disabled { opacity: .65; cursor: wait; }
+.secondary-button {
+  padding: 10px 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #d8dbe0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+.secondary-button svg { color: var(--red); }
 .text-button { margin-top: 23px; padding: 0; border: 0; color: var(--ink); background: transparent; cursor: pointer; font-size: 13px; font-weight: 700; }
 .auth-switch-action { color: var(--red); }
 .form-status { margin: 0; color: var(--red); font-size: 12px; line-height: 1.4; }
@@ -1658,6 +1673,44 @@ footer .logo {
 .ios-instructions p { margin: 0 0 10px; font-weight: 700; }
 .ios-instructions ol { margin: 0; padding-left: 18px; }
 .ios-instructions li + li { margin-top: 8px; }
+.ios-safari-warning {
+  margin: 0 0 25px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  text-align: left;
+  border: 1px solid #f1c8c8;
+  border-left: 4px solid var(--red);
+  border-radius: 12px;
+  background: #fff7f7;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.ios-safari-warning > svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--red);
+}
+.ios-safari-warning strong,
+.ios-help strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.ios-safari-warning p {
+  margin: 0 0 13px;
+  color: var(--ink);
+}
+.ios-help {
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid #e5e5e5;
+}
+.ios-help ul {
+  margin: 0;
+  padding-left: 18px;
+}
 .admin-button { display: grid; text-decoration: none; }
 .signout-button { display: none; }
 .admin-page { min-height: calc(100svh - 82px); padding: clamp(30px,5vw,72px); }

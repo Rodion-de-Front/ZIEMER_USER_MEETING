@@ -1,11 +1,29 @@
 import { useEffect, useState } from "react";
-import { Download, Languages, MonitorSmartphone, Share } from "lucide-react";
+import {
+  CheckCircle,
+  Compass,
+  Copy,
+  Download,
+  Languages,
+  MonitorSmartphone,
+  Share,
+} from "lucide-react";
 import { useLanguage } from "../i18n";
 
 const isStandalone = () =>
   window.matchMedia("(display-mode: standalone)").matches ||
   window.navigator.standalone === true;
 const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isIosSafari = () => {
+  const ua = navigator.userAgent;
+  return (
+    isIos() &&
+    /safari/i.test(ua) &&
+    !/crios|fxios|edgios|opios|mercury|yabrowser|gsa|instagram|fban|fbav|line|micromessenger|whatsapp|telegram/i.test(
+      ua,
+    )
+  );
+};
 
 export function InstallGate({ children }) {
   const { language, setLanguage, t } = useLanguage();
@@ -14,7 +32,9 @@ export function InstallGate({ children }) {
   );
   const [standalone, setStandalone] = useState(isStandalone);
   const [installStarted, setInstallStarted] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const ios = isIos();
+  const iosSafari = isIosSafari();
 
   useEffect(() => {
     const onInstallReady = () => setDeferredPrompt(window.__pwaInstallPrompt);
@@ -46,6 +66,16 @@ export function InstallGate({ children }) {
     setInstallStarted(true);
   }
 
+  async function copyCurrentLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      window.setTimeout(() => setLinkCopied(false), 2600);
+    } catch {
+      setLinkCopied(false);
+    }
+  }
+
   if (standalone) return children;
 
   return (
@@ -65,7 +95,19 @@ export function InstallGate({ children }) {
         <p className="auth-kicker">{t("portal")}</p>
         <h1>{t("installTitle")}</h1>
         <p>{t("installText")}</p>
-        {ios ? (
+        {ios && !iosSafari ? (
+          <div className="ios-safari-warning">
+            <Compass size={20} />
+            <div>
+              <strong>{t("iosSafariRequiredTitle")}</strong>
+              <p>{t("iosSafariRequiredText")}</p>
+              <button className="secondary-button" type="button" onClick={copyCurrentLink}>
+                {linkCopied ? <CheckCircle size={17} /> : <Copy size={17} />}
+                {linkCopied ? t("linkCopied") : t("copyLink")}
+              </button>
+            </div>
+          </div>
+        ) : ios ? (
           <div className="ios-instructions">
             <Share size={18} />
             <div>
@@ -75,6 +117,14 @@ export function InstallGate({ children }) {
                   <li key={step}>{step}</li>
                 ))}
               </ol>
+              <div className="ios-help">
+                <strong>{t("iosNoOptionTitle")}</strong>
+                <ul>
+                  {t("iosNoOptionSteps").map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         ) : (

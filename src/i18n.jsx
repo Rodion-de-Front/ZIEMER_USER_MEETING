@@ -25,12 +25,24 @@ const dictionaries = {
     iosIntro:
       "Для iPhone приложение нужно добавить через Safari. Делайте по шагам:",
     iosSteps: [
-      "Откройте эту страницу именно в Safari. Если вы сейчас в Telegram, WhatsApp или другом приложении, нажмите значок открытия в браузере и выберите Safari",
+      "Откройте эту страницу именно в Safari. Во встроенном браузере Telegram, WhatsApp, почты или другого приложения нужного пункта может не быть",
       "Внизу экрана найдите кнопку «Поделиться»: квадрат со стрелкой вверх. Если нижней панели не видно, слегка коснитесь экрана или прокрутите страницу вверх",
       "В открывшемся списке пролистайте вниз и нажмите «На экран Домой»",
       "На следующем экране ничего менять не нужно. Нажмите «Добавить» в правом верхнем углу",
       "Вернитесь на главный экран iPhone и найдите новую иконку ZIEMER CLUB",
       "Откройте портал только через эту иконку. После этого можно войти или зарегистрироваться",
+    ],
+    iosSafariRequiredTitle: "Сначала откройте ссылку в Safari",
+    iosSafariRequiredText:
+      "На iPhone установка на экран работает надежно только из Safari. Скопируйте ссылку, откройте Safari, вставьте ее в адресную строку и уже там нажмите «Поделиться».",
+    copyLink: "Скопировать ссылку",
+    linkCopied: "Ссылка скопирована",
+    iosNoOptionTitle: "Если пункта «На экран Домой» нет:",
+    iosNoOptionSteps: [
+      "Проверьте, что страница открыта именно в Safari, а не внутри мессенджера, почты, Google или Chrome",
+      "Откройте обычную вкладку Safari. В приватном режиме пункт может не появляться",
+      "В меню «Поделиться» пролистайте список действий ниже, не только верхний ряд иконок",
+      "Если внизу есть «Редактировать действия», откройте его и добавьте действие «На экран Домой»",
     ],
     installHint: "Нажмите кнопку ниже и подтвердите установку в браузере.",
     openInstalledApp: "Откройте приложение через иконку на рабочем столе",
@@ -126,12 +138,24 @@ const dictionaries = {
       "The portal is available after installing ZIEMER CLUB as an app.",
     iosIntro: "On iPhone, add the portal through Safari. Follow these steps:",
     iosSteps: [
-      "Open this page in Safari. If you are viewing it inside Telegram, WhatsApp, or another app, tap the option to open it in the browser and choose Safari.",
+      "Open this page in Safari. If it is inside Telegram, WhatsApp, email, or another app, the required action may be missing.",
       "At the bottom of the screen, tap the Share button: the square with an arrow pointing up. If the bottom bar is hidden, tap the screen or scroll slightly up.",
       "Scroll down in the menu and tap “Add to Home Screen”.",
       "On the next screen, you do not need to change anything. Tap “Add” in the top-right corner.",
       "Return to the iPhone Home Screen and find the new ZIEMER CLUB icon.",
       "Open the portal only from that icon. Then sign in or create your account.",
+    ],
+    iosSafariRequiredTitle: "Open the link in Safari first",
+    iosSafariRequiredText:
+      "On iPhone, adding to the Home Screen works reliably from Safari. Copy the link, open Safari, paste it into the address bar, then tap Share there.",
+    copyLink: "Copy link",
+    linkCopied: "Link copied",
+    iosNoOptionTitle: "If “Add to Home Screen” is missing:",
+    iosNoOptionSteps: [
+      "Make sure the page is open in Safari, not inside a messenger, email app, Google, or Chrome.",
+      "Use a normal Safari tab. The action may be unavailable in Private Browsing.",
+      "In the Share menu, scroll down through the action list, not only the top row of icons.",
+      "If you see “Edit Actions” at the bottom, open it and add “Add to Home Screen”.",
     ],
     installHint:
       "Press the button below and confirm installation in your browser.",
