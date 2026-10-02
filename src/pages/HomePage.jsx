@@ -42,9 +42,11 @@ export function HomePage() {
           {copy.meta}
         </div>
         <h1>
-          <em>ZIEMER CLUB</em>
+          <em>ZIEMER</em>
           <br />
-          USER MEETING
+          USER
+          <br />
+          MEETING
         </h1>
         <div className="hero-bottom">
           <div>
