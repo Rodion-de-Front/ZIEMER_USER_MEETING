@@ -1652,7 +1652,11 @@ footer .logo {
 .install-card { text-align: center; }
 .install-icon { width: 64px; height: 64px; margin: 0 auto 25px; display: grid; place-items: center; border-radius: 50%; color: white; background: var(--ink); }
 .install-hint { font-size: 13px; }
-.ios-instructions { margin: 0 0 25px; padding: 13px; display: flex; align-items: center; gap: 10px; text-align: left; border-left: 3px solid var(--red); background: #f8f8f8; font-size: 13px; line-height: 1.4; }
+.ios-instructions { margin: 0 0 25px; padding: 14px; display: flex; align-items: flex-start; gap: 10px; text-align: left; border-left: 3px solid var(--red); background: #f8f8f8; font-size: 13px; line-height: 1.45; }
+.ios-instructions svg { flex: 0 0 auto; margin-top: 2px; color: var(--red); }
+.ios-instructions p { margin: 0 0 10px; font-weight: 700; }
+.ios-instructions ol { margin: 0; padding-left: 18px; }
+.ios-instructions li + li { margin-top: 8px; }
 .admin-button { display: grid; text-decoration: none; }
 .signout-button { display: none; }
 .admin-page { min-height: calc(100svh - 82px); padding: clamp(30px,5vw,72px); }

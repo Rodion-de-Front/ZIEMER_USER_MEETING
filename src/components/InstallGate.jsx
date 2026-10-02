@@ -68,7 +68,14 @@ export function InstallGate({ children }) {
         {ios ? (
           <div className="ios-instructions">
             <Share size={18} />
-            <span>{t("ios")}</span>
+            <div>
+              <p>{t("iosIntro")}</p>
+              <ol>
+                {t("iosSteps").map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
           </div>
         ) : (
           <p className="install-hint">

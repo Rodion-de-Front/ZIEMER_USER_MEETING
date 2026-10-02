@@ -21,9 +21,17 @@ const dictionaries = {
     install: "Установить приложение",
     portal: "ЗАКРЫТЫЙ ПОРТАЛ",
     installTitle: "Добавьте приложение на экран",
-    installText:
-      "Портал доступен после установки ZIEMER USER MEETING как приложения.",
-    ios: "В Safari нажмите системную кнопку «Поделиться», затем «На экран Домой». После этого откройте портал через новую иконку.",
+    installText: "Портал доступен после установки ZIEMER CLUB как приложения.",
+    iosIntro:
+      "Для iPhone приложение нужно добавить через Safari. Делайте по шагам:",
+    iosSteps: [
+      "Откройте эту страницу именно в Safari. Если вы сейчас в Telegram, WhatsApp или другом приложении, нажмите значок открытия в браузере и выберите Safari",
+      "Внизу экрана найдите кнопку «Поделиться»: квадрат со стрелкой вверх. Если нижней панели не видно, слегка коснитесь экрана или прокрутите страницу вверх",
+      "В открывшемся списке пролистайте вниз и нажмите «На экран Домой»",
+      "На следующем экране ничего менять не нужно. Нажмите «Добавить» в правом верхнем углу",
+      "Вернитесь на главный экран iPhone и найдите новую иконку ZIEMER CLUB",
+      "Откройте портал только через эту иконку. После этого можно войти или зарегистрироваться",
+    ],
     installHint: "Нажмите кнопку ниже и подтвердите установку в браузере.",
     openInstalledApp: "Откройте приложение через иконку на рабочем столе",
     pushRequiredTitle: "Включите уведомления",
@@ -46,7 +54,8 @@ const dictionaries = {
     welcome: "Добро пожаловать",
     createAccount: "Создайте аккаунт",
     loginText: "Войдите в закрытый портал участников.",
-    registerText: "Заполните профиль участника, чтобы войти в закрытый портал.",
+    registerText:
+      "Fill in the participant profile to create your account and enter the private portal.",
     fullName: "ФИО",
     workplace: "Место работы",
     city: "Город",
@@ -114,8 +123,16 @@ const dictionaries = {
     portal: "MEMBERS PORTAL",
     installTitle: "Add the app to your home screen",
     installText:
-      "The portal is available after installing ZIEMER USER MEETING as an app.",
-    ios: "In Safari, tap the system “Share” button, then “Add to Home Screen”. Then open the portal from the new icon.",
+      "The portal is available after installing ZIEMER CLUB as an app.",
+    iosIntro: "On iPhone, add the portal through Safari. Follow these steps:",
+    iosSteps: [
+      "Open this page in Safari. If you are viewing it inside Telegram, WhatsApp, or another app, tap the option to open it in the browser and choose Safari.",
+      "At the bottom of the screen, tap the Share button: the square with an arrow pointing up. If the bottom bar is hidden, tap the screen or scroll slightly up.",
+      "Scroll down in the menu and tap “Add to Home Screen”.",
+      "On the next screen, you do not need to change anything. Tap “Add” in the top-right corner.",
+      "Return to the iPhone Home Screen and find the new ZIEMER CLUB icon.",
+      "Open the portal only from that icon. Then sign in or create your account.",
+    ],
     installHint:
       "Press the button below and confirm installation in your browser.",
     openInstalledApp: "Open the app from the desktop icon",
@@ -140,7 +157,7 @@ const dictionaries = {
     createAccount: "Create your account",
     loginText: "Sign in to the private participant portal.",
     registerText:
-      "Complete your participant profile to enter the private portal.",
+      "Fill in the participant profile to create your account and enter the private portal.",
     fullName: "Full name",
     workplace: "Workplace",
     city: "City",

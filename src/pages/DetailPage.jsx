@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Download,
   Eye,
   MapPin,
   Play,
@@ -223,34 +222,26 @@ export function DetailPage() {
             {
               title: "AQUARIUZ",
               href: "/materials/aquariuz.pdf",
-              download: "AQUARIUZ.pdf",
             },
             {
               title: "FLOW SUITE",
               href: "/materials/flow-suite.pdf",
-              download: "FLOW SUITE.pdf",
             },
             {
               title: en ? "Book of values" : "КНИГА ЦЕННОСТЕЙ",
               href: "/materials/ziemer-values.pdf",
-              download: en ? "Book of values.pdf" : "Книга ценностей.pdf",
             },
             {
               title: "OPTO XLINK",
               href: "/materials/opto-xlink.pdf",
-              download: "OPTO XLINK.pdf",
             },
             {
               title: "FERRARA RING",
               href: "/materials/ferrara-ring.pdf",
-              download: "FERRARA RING.pdf",
             },
             {
               title: en ? "CLEAR for patients" : "CLEAR ДЛЯ ПАЦИЕНТОВ",
               href: "/materials/clear-for-patients.pdf",
-              download: en
-                ? "CLEAR for patients.pdf"
-                : "CLEAR для пациентов.pdf",
             },
             {
               title: en ? "Information on the website" : "Информация на сайте",
@@ -261,19 +252,14 @@ export function DetailPage() {
             <a
               key={item.title}
               href={item.href}
-              {...(item.external
-                ? { target: "_blank", rel: "noreferrer" }
-                : { download: item.download })}
+              target="_blank"
+              rel="noreferrer"
             >
               <span className="download-type">
                 {item.external ? "WEB" : "PDF"}
               </span>
               <strong>{item.title}</strong>
-              {item.external ? (
-                <ArrowUpRight size={18} />
-              ) : (
-                <Download size={18} />
-              )}
+              {item.external ? <ArrowUpRight size={18} /> : <Eye size={18} />}
             </a>
           ))}
         </div>
