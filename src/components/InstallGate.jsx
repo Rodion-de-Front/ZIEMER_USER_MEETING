@@ -14,6 +14,7 @@ const isStandalone = () =>
   window.matchMedia("(display-mode: standalone)").matches ||
   window.navigator.standalone === true;
 const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isAndroid = () => /android/i.test(navigator.userAgent);
 const isIosSafari = () => {
   const ua = navigator.userAgent;
   return (
@@ -32,22 +33,34 @@ export function InstallGate({ children }) {
   );
   const [standalone, setStandalone] = useState(isStandalone);
   const [installStarted, setInstallStarted] = useState(false);
+  const [installDismissed, setInstallDismissed] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const ios = isIos();
+  const android = isAndroid();
   const iosSafari = isIosSafari();
 
   useEffect(() => {
-    const onInstallReady = () => setDeferredPrompt(window.__pwaInstallPrompt);
-    const syncStandalone = () => setStandalone(isStandalone());
+    const onInstallReady = () => {
+      setDeferredPrompt(window.__pwaInstallPrompt);
+      setInstallDismissed(false);
+    };
+    const syncStandalone = () => {
+      setStandalone(isStandalone());
+      if (isStandalone()) setInstallStarted(true);
+    };
+    const onInstalled = () => {
+      setInstallStarted(true);
+      syncStandalone();
+    };
     const displayMode = window.matchMedia("(display-mode: standalone)");
     window.addEventListener("pwa-install-ready", onInstallReady);
-    window.addEventListener("appinstalled", syncStandalone);
+    window.addEventListener("appinstalled", onInstalled);
     window.addEventListener("focus", syncStandalone);
     document.addEventListener("visibilitychange", syncStandalone);
     displayMode.addEventListener?.("change", syncStandalone);
     return () => {
       window.removeEventListener("pwa-install-ready", onInstallReady);
-      window.removeEventListener("appinstalled", syncStandalone);
+      window.removeEventListener("appinstalled", onInstalled);
       window.removeEventListener("focus", syncStandalone);
       document.removeEventListener("visibilitychange", syncStandalone);
       displayMode.removeEventListener?.("change", syncStandalone);
@@ -55,15 +68,27 @@ export function InstallGate({ children }) {
   }, []);
 
   async function install() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
+    if (!deferredPrompt) {
+      setInstallDismissed(true);
+      return;
+    }
+
+    try {
+      await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       setDeferredPrompt(null);
       window.__pwaInstallPrompt = null;
-      if (outcome === "accepted") setInstallStarted(true);
-      return;
+      if (outcome === "accepted") {
+        setInstallStarted(true);
+        setInstallDismissed(false);
+      } else {
+        setInstallDismissed(true);
+      }
+    } catch {
+      setDeferredPrompt(null);
+      window.__pwaInstallPrompt = null;
+      setInstallDismissed(true);
     }
-    setInstallStarted(true);
   }
 
   async function copyCurrentLink() {
@@ -127,6 +152,64 @@ export function InstallGate({ children }) {
               </div>
             </div>
           </div>
+        ) : android ? (
+          <>
+            <button className="primary-button" type="button" onClick={install}>
+              <Download size={17} /> {t("install")}
+            </button>
+            {installStarted && (
+              <p className="install-result" role="status">
+                <CheckCircle size={17} /> {t("openInstalledApp")}
+              </p>
+            )}
+            {installDismissed && (
+              <p className="install-result install-result-warning" role="status">
+                {t("androidInstallDismissed")}
+              </p>
+            )}
+            <p className="android-fallback-notice">
+              {t("androidFallbackNotice")}
+            </p>
+            <div className="ios-instructions android-instructions">
+              <Download size={18} />
+              <div>
+                <p>{t("androidIntro")}</p>
+                <ol>
+                  {(deferredPrompt
+                    ? t("androidSteps")
+                    : t("androidManualSteps")
+                  ).map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+                <div className="ios-help">
+                  <strong>
+                    {deferredPrompt
+                      ? t("androidManualTitle")
+                      : t("androidNoOptionTitle")}
+                  </strong>
+                  <ul>
+                    {(deferredPrompt
+                      ? t("androidManualSteps")
+                      : t("androidNoOptionSteps")
+                    ).map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ul>
+                  {!deferredPrompt && (
+                    <button
+                      className="secondary-button android-copy-button"
+                      type="button"
+                      onClick={copyCurrentLink}
+                    >
+                      {linkCopied ? <CheckCircle size={17} /> : <Copy size={17} />}
+                      {linkCopied ? t("linkCopied") : t("copyLink")}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
         ) : (
           <p className="install-hint">
             {installStarted || !deferredPrompt
@@ -134,7 +217,7 @@ export function InstallGate({ children }) {
               : t("installHint")}
           </p>
         )}
-        {!ios && (
+        {!ios && !android && deferredPrompt && (
           <button className="primary-button" type="button" onClick={install}>
             <Download size={17} /> {t("install")}
           </button>

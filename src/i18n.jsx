@@ -44,6 +44,33 @@ const dictionaries = {
       "В меню «Поделиться» пролистайте список действий ниже, не только верхний ряд иконок",
       "Если внизу есть «Редактировать действия», откройте его и добавьте действие «На экран Домой»",
     ],
+    androidIntro:
+      "На Android устанавливайте приложение через Chrome. Делайте по шагам:",
+    androidFallbackNotice:
+      "Не получилось установить по кнопке? Смотрите подробную инструкцию ниже.",
+    androidSteps: [
+      "Убедитесь, что страница открыта в Chrome, а не внутри Telegram, WhatsApp, почты или другого приложения",
+      "Нажмите красную кнопку «Установить приложение» под этой инструкцией",
+      "В системном окне нажмите «Установить» и дождитесь завершения установки",
+      "Вернитесь на главный экран или откройте список приложений и найдите иконку ZIEMER CLUB",
+      "Открывайте портал через эту иконку. После этого можно войти или зарегистрироваться",
+    ],
+    androidManualTitle: "Если кнопка установки не сработала:",
+    androidManualSteps: [
+      "Откройте эту страницу в Chrome. Если ссылка открылась внутри мессенджера, скопируйте ее и вставьте в адресную строку Chrome",
+      "Нажмите три точки ⋮ в правом верхнем углу Chrome",
+      "Выберите «Установить приложение» или «Добавить на главный экран»",
+      "Подтвердите установку и откройте ZIEMER CLUB через появившуюся иконку",
+    ],
+    androidNoOptionTitle: "Если пункта установки в меню нет:",
+    androidNoOptionSteps: [
+      "Проверьте, что используется обычная вкладка Chrome, а не режим инкогнито или встроенный браузер другого приложения",
+      "Обновите Chrome через Google Play, полностью закройте его и снова откройте ссылку",
+      "Проверьте список приложений: ZIEMER CLUB уже мог быть установлен раньше",
+      "Скопируйте ссылку кнопкой ниже и откройте ее напрямую в Chrome",
+    ],
+    androidInstallDismissed:
+      "Установка не была подтверждена. Установите приложение через меню Chrome по инструкции выше.",
     installHint: "Нажмите кнопку ниже и подтвердите установку в браузере.",
     openInstalledApp: "Откройте приложение через иконку на рабочем столе",
     pushRequiredTitle: "Включите уведомления",
@@ -157,6 +184,33 @@ const dictionaries = {
       "In the Share menu, scroll down through the action list, not only the top row of icons.",
       "If you see “Edit Actions” at the bottom, open it and add “Add to Home Screen”.",
     ],
+    androidIntro:
+      "On Android, install the app through Chrome. Follow these steps:",
+    androidFallbackNotice:
+      "Could not install using the button? Follow the detailed instructions below.",
+    androidSteps: [
+      "Make sure the page is open in Chrome, not inside Telegram, WhatsApp, email, or another app.",
+      "Tap the red “Install app” button below these instructions.",
+      "Tap “Install” in the system prompt and wait for the installation to finish.",
+      "Return to the Home Screen or open the app list and find the ZIEMER CLUB icon.",
+      "Open the portal from this icon. Then sign in or create your account.",
+    ],
+    androidManualTitle: "If the install button does not work:",
+    androidManualSteps: [
+      "Open this page in Chrome. If the link opened inside a messenger, copy it and paste it into the Chrome address bar.",
+      "Tap the three-dot menu ⋮ in the top-right corner of Chrome.",
+      "Choose “Install app” or “Add to Home screen”.",
+      "Confirm installation and open ZIEMER CLUB from the new icon.",
+    ],
+    androidNoOptionTitle: "If the install action is missing:",
+    androidNoOptionSteps: [
+      "Make sure you are using a normal Chrome tab, not Incognito mode or an in-app browser.",
+      "Update Chrome through Google Play, close it completely, then open the link again.",
+      "Check your app list: ZIEMER CLUB may already be installed.",
+      "Copy the link with the button below and open it directly in Chrome.",
+    ],
+    androidInstallDismissed:
+      "Installation was not confirmed. Use the Chrome menu and follow the instructions above.",
     installHint:
       "Press the button below and confirm installation in your browser.",
     openInstalledApp: "Open the app from the desktop icon",

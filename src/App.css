@@ -1712,6 +1712,61 @@ footer .logo {
   margin: 0;
   padding-left: 18px;
 }
+.android-copy-button {
+  width: 100%;
+  margin-top: 14px;
+}
+.android-fallback-notice {
+  margin: 14px 0;
+  padding: 11px 12px;
+  border: 1px solid #efbebe;
+  border-radius: 8px;
+  color: #a11616;
+  background: #fff1f1;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+}
+.install-result {
+  margin: 14px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #257347;
+  font-size: 13px;
+  font-weight: 700;
+}
+.install-result-warning {
+  color: var(--red);
+  line-height: 1.45;
+}
+.install-page {
+  align-items: start;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.install-page .install-card {
+  margin-block: auto;
+}
+@media (max-width: 600px) {
+  .install-page {
+    padding: 12px;
+  }
+  .install-page .install-card {
+    width: 100%;
+    padding: 28px 18px;
+    border-radius: 18px;
+  }
+  .install-card h1 {
+    font-size: 32px;
+    line-height: 1;
+  }
+  .ios-instructions {
+    padding: 12px;
+  }
+}
 .admin-button { display: grid; text-decoration: none; }
 .signout-button { display: none; }
 .admin-page { min-height: calc(100svh - 82px); padding: clamp(30px,5vw,72px); }
