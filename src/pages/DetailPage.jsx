@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
+  Download,
   Eye,
   MapPin,
   Play,
+  X,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getConferenceContent } from "../data/conference";
@@ -25,9 +27,60 @@ export function DetailPage() {
   const [rating, setRating] = useState(0);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [previewMaterial, setPreviewMaterial] = useState(null);
+  const en = language === "en";
+  const materials = [
+    {
+      title: "AQUARIUZ",
+      href: "/materials/aquariuz.pdf",
+    },
+    {
+      title: "FLOW SUITE",
+      href: "/materials/flow-suite.pdf",
+    },
+    {
+      title: en ? "Book of values" : "КНИГА ЦЕННОСТЕЙ",
+      href: "/materials/ziemer-values.pdf",
+    },
+    {
+      title: "OPTO XLINK",
+      href: "/materials/opto-xlink.pdf",
+    },
+    {
+      title: "FERRARA RING",
+      href: "/materials/ferrara-ring.pdf",
+    },
+    {
+      title: en ? "CLEAR for patients" : "CLEAR ДЛЯ ПАЦИЕНТОВ",
+      href: "/materials/clear-for-patients.pdf",
+    },
+    {
+      title: en ? "Information on the website" : "Информация на сайте",
+      href: "https://femtomed.ru",
+      external: true,
+    },
+  ];
+
+  useEffect(() => {
+    if (!previewMaterial) return;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setPreviewMaterial(null);
+    };
+    const scrollY = window.scrollY;
+    document.documentElement.classList.add("pdf-preview-open");
+    document.body.style.top = `-${scrollY}px`;
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.documentElement.classList.remove("pdf-preview-open");
+      document.body.style.top = "";
+      window.removeEventListener("keydown", onKeyDown);
+      window.scrollTo(0, scrollY);
+    };
+  }, [previewMaterial]);
+
   if (!item) return null;
   const Icon = item.icon;
-  const en = language === "en";
+
   const renderSchedule = (items) => (
     <div className="schedule">
       {items.map((entry) => (
@@ -218,50 +271,35 @@ export function DetailPage() {
     materials: (
       <>
         <div className="downloads">
-          {[
-            {
-              title: "AQUARIUZ",
-              href: "/materials/aquariuz.pdf",
-            },
-            {
-              title: "FLOW SUITE",
-              href: "/materials/flow-suite.pdf",
-            },
-            {
-              title: en ? "Book of values" : "КНИГА ЦЕННОСТЕЙ",
-              href: "/materials/ziemer-values.pdf",
-            },
-            {
-              title: "OPTO XLINK",
-              href: "/materials/opto-xlink.pdf",
-            },
-            {
-              title: "FERRARA RING",
-              href: "/materials/ferrara-ring.pdf",
-            },
-            {
-              title: en ? "CLEAR for patients" : "CLEAR ДЛЯ ПАЦИЕНТОВ",
-              href: "/materials/clear-for-patients.pdf",
-            },
-            {
-              title: en ? "Information on the website" : "Информация на сайте",
-              href: "https://femtomed.ru",
-              external: true,
-            },
-          ].map((item) => (
-            <a
-              key={item.title}
-              href={item.href}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="download-type">
-                {item.external ? "WEB" : "PDF"}
-              </span>
-              <strong>{item.title}</strong>
-              {item.external ? <ArrowUpRight size={18} /> : <Eye size={18} />}
-            </a>
-          ))}
+          {materials.map((item) =>
+            item.external ? (
+              <a
+                key={item.title}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="download-type">WEB</span>
+                <strong>{item.title}</strong>
+                <ArrowUpRight size={18} />
+              </a>
+            ) : (
+              <button
+                key={item.title}
+                type="button"
+                onClick={() => setPreviewMaterial(item)}
+                aria-label={
+                  en
+                    ? `Preview ${item.title}`
+                    : `Предпросмотр ${item.title}`
+                }
+              >
+                <span className="download-type">PDF</span>
+                <strong>{item.title}</strong>
+                <Eye size={18} />
+              </button>
+            ),
+          )}
         </div>
         <p className="materials-note">
           {en
@@ -392,6 +430,53 @@ export function DetailPage() {
         <p>{item.text}</p>
       </section>
       <section className="detail-content">{bodies[pageId]}</section>
+      {previewMaterial && (
+        <div
+          className="pdf-preview-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setPreviewMaterial(null);
+          }}
+        >
+          <section
+            className="pdf-preview"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pdf-preview-title"
+          >
+            <header className="pdf-preview-header">
+              <div>
+                <span className="download-type">PDF</span>
+                <h2 id="pdf-preview-title">{previewMaterial.title}</h2>
+              </div>
+              <div className="pdf-preview-actions">
+                <a
+                  className="icon-button"
+                  href={previewMaterial.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={en ? "Open PDF" : "Открыть PDF"}
+                >
+                  <Download size={18} />
+                </a>
+                <button
+                  className="icon-button"
+                  type="button"
+                  onClick={() => setPreviewMaterial(null)}
+                  aria-label={t("close")}
+                >
+                  <X size={19} />
+                </button>
+              </div>
+            </header>
+            <iframe
+              className="pdf-preview-frame"
+              title={previewMaterial.title}
+              src={`${previewMaterial.href}#toolbar=1&navpanes=0`}
+            />
+          </section>
+        </div>
+      )}
     </main>
   );
 }
