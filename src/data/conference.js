@@ -454,7 +454,7 @@ export const content = {
         time: "10:30–10:40",
         title:
           "AQUARIUZ today and tomorrow: new features and clinical prospects",
-        speaker: "Viktor Ruf",
+        speaker: "Viktor Ruff",
         note: "in Russian",
       },
       {

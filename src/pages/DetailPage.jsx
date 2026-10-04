@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -6,7 +6,6 @@ import {
   Eye,
   MapPin,
   Play,
-  X,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getConferenceContent } from "../data/conference";
@@ -27,7 +26,6 @@ export function DetailPage() {
   const [rating, setRating] = useState(0);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-  const [previewMaterial, setPreviewMaterial] = useState(null);
   const en = language === "en";
   const materials = [
     {
@@ -60,23 +58,6 @@ export function DetailPage() {
       external: true,
     },
   ];
-
-  useEffect(() => {
-    if (!previewMaterial) return;
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") setPreviewMaterial(null);
-    };
-    const scrollY = window.scrollY;
-    document.documentElement.classList.add("pdf-preview-open");
-    document.body.style.top = `-${scrollY}px`;
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.documentElement.classList.remove("pdf-preview-open");
-      document.body.style.top = "";
-      window.removeEventListener("keydown", onKeyDown);
-      window.scrollTo(0, scrollY);
-    };
-  }, [previewMaterial]);
 
   if (!item) return null;
   const Icon = item.icon;
@@ -284,20 +265,20 @@ export function DetailPage() {
                 <ArrowUpRight size={18} />
               </a>
             ) : (
-              <button
+              <a
                 key={item.title}
-                type="button"
-                onClick={() => setPreviewMaterial(item)}
+                href={item.href}
+                download
                 aria-label={
                   en
-                    ? `Preview ${item.title}`
-                    : `Предпросмотр ${item.title}`
+                    ? `Download ${item.title}`
+                    : `Скачать ${item.title}`
                 }
               >
                 <span className="download-type">PDF</span>
                 <strong>{item.title}</strong>
-                <Eye size={18} />
-              </button>
+                <Download size={18} />
+              </a>
             ),
           )}
         </div>
@@ -430,53 +411,6 @@ export function DetailPage() {
         <p>{item.text}</p>
       </section>
       <section className="detail-content">{bodies[pageId]}</section>
-      {previewMaterial && (
-        <div
-          className="pdf-preview-backdrop"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setPreviewMaterial(null);
-          }}
-        >
-          <section
-            className="pdf-preview"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="pdf-preview-title"
-          >
-            <header className="pdf-preview-header">
-              <div>
-                <span className="download-type">PDF</span>
-                <h2 id="pdf-preview-title">{previewMaterial.title}</h2>
-              </div>
-              <div className="pdf-preview-actions">
-                <a
-                  className="icon-button"
-                  href={previewMaterial.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={en ? "Open PDF" : "Открыть PDF"}
-                >
-                  <Download size={18} />
-                </a>
-                <button
-                  className="icon-button"
-                  type="button"
-                  onClick={() => setPreviewMaterial(null)}
-                  aria-label={t("close")}
-                >
-                  <X size={19} />
-                </button>
-              </div>
-            </header>
-            <iframe
-              className="pdf-preview-frame"
-              title={previewMaterial.title}
-              src={`${previewMaterial.href}#toolbar=1&navpanes=0`}
-            />
-          </section>
-        </div>
-      )}
     </main>
   );
 }
