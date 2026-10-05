@@ -165,7 +165,7 @@ export const content = {
         time: "10:40–10:50",
         title:
           "Результаты применения твердотельного абляционного лазера AQUARIUZ при коррекции миопии и миопического астигматизма",
-        speaker: "Хаджян Ануш Тиграновна",
+        speaker: "Ханджян Ануш Тиграновна",
       },
       {
         time: "10:50–11:00",
@@ -461,7 +461,7 @@ export const content = {
         time: "10:40–10:50",
         title:
           "Outcomes of the AQUARIUZ solid-state ablation laser for myopia and myopic astigmatism correction",
-        speaker: "Anush Tigranovna Khadzhyan",
+        speaker: "Anush Tigranovna Khandzhyan",
       },
       {
         time: "10:50–11:00",
