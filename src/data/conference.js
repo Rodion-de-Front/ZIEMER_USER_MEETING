@@ -202,7 +202,8 @@ export const content = {
       },
       {
         time: "12:05–12:15",
-        title: "Клинический опыт выполнения CLEAR SUPRA",
+        title:
+          "Персонализированное автоматизированное планирование рефракционной лентикулярной коррекции миопии с использованием Galilei G6 ColorZ",
         speaker: "Шевчук Мария Алексеевна",
       },
       {
@@ -499,7 +500,8 @@ export const content = {
       },
       {
         time: "12:05–12:15",
-        title: "Clinical experience with CLEAR SUPRA",
+        title:
+          "Personalized automated planning of refractive lenticule correction of myopia using Galilei G6 ColorZ",
         speaker: "Maria Alekseyevna Shevchuk",
       },
       {
