@@ -128,16 +128,6 @@ export const content = {
     },
 
     programMeta: [
-      {
-        label: "Президиум I части научной программы",
-        value:
-          "Нероев В. В., Ханджян А. Т., Мушкова И. А., Антонюк В. Д., Бойко А. А., Слонимский А. Ю.",
-      },
-      {
-        label: "Президиум II части научной программы",
-        value:
-          "Нероев В. В., Ханджян А. Т., Слонимский А. Ю., Антонюк В. Д., Синицын М. В.",
-      },
       { label: "Модератор", value: "Слонимский А. Ю." },
     ],
 
@@ -425,16 +415,6 @@ export const content = {
     },
 
     programMeta: [
-      {
-        label: "Presidium of scientific programme, part I",
-        value:
-          "Neroev V. V., Khandzhyan A. T., Mushkova I. A., Antonyuk V. D., Boyko A. A., Slonimsky A. Yu.",
-      },
-      {
-        label: "Presidium of scientific programme, part II",
-        value:
-          "Neroev V. V., Khandzhyan A. T., Slonimsky A. Yu., Antonyuk V. D., Sinitsyn M. V.",
-      },
       { label: "Moderator", value: "Slonimsky A. Yu." },
     ],
 
