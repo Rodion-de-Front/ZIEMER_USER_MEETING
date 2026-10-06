@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Download,
   Eye,
   MapPin,
   Play,
@@ -13,6 +12,12 @@ import { getConferenceContent } from "../data/conference";
 import { Loader } from "../components/Loader";
 import { useLanguage } from "../i18n";
 import { api } from "../lib/api";
+
+const PdfDocumentViewer = lazy(() =>
+  import("../components/PdfDocumentViewer").then((module) => ({
+    default: module.PdfDocumentViewer,
+  })),
+);
 
 const yandexMapsVenueUrl =
   "https://yandex.com/maps/org/radisson_collection_hotel_moscow/1152255963/?filter=alternate_vertical%3ARequestWindow&ll=37.577682%2C55.748751&mode=search&sctx=ZAAAAAgBEAAaKAoSCcO68e7I1EJAEYEjgQab3EtAEhIJU3sRbcfU4D8RyxMIO8Wqxz8iBgABAgMEBSgKOABAhZIHSAFqAnJ1nQHNzMw9oAEAqAEAvQE%2FlLp5wgELsd7kzM8F24%2B4pQSCAiXQs9C%2B0YHRgtC40L3QuNGG0LAgwqvQo9C60YDQsNC40L3QsMK7igIAkgIAmgIMZGVza3RvcC1tYXBz2gIoChIJuoWuRKDIQkARVoT8qurfS0ASEgkAlC2SdqOnPxEAmEuqtpuQP%2BACAQ%3D%3D&sll=37.568949%2C55.748751&sspn=0.063507%2C0.022311&text=%D0%B3%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B8%D1%86%D0%B0%20%C2%AB%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0%C2%BB&z=14.92";
@@ -289,41 +294,26 @@ export function DetailPage() {
                 <ArrowUpRight size={18} />
               </a>
             ) : (
-              <div className="download-row" key={item.title}>
+              <button
+                className="download-row"
+                key={item.title}
+                type="button"
+                onClick={() => setPreviewItem(item)}
+                aria-label={
+                  en ? `View ${item.title}` : `Просмотреть ${item.title}`
+                }
+              >
                 <span className="download-type">PDF</span>
                 <strong>{item.title}</strong>
-                <div className="material-actions">
-                  <button
-                    type="button"
-                    onClick={() => setPreviewItem(item)}
-                    aria-label={
-                      en ? `View ${item.title}` : `Просмотреть ${item.title}`
-                    }
-                    title={en ? "View" : "Просмотреть"}
-                  >
-                    <Eye size={18} />
-                  </button>
-                  <a
-                    href={`${item.href}?download=1`}
-                    download
-                    aria-label={
-                      en
-                        ? `Download ${item.title}`
-                        : `Скачать ${item.title}`
-                    }
-                    title={en ? "Download" : "Скачать"}
-                  >
-                    <Download size={18} />
-                  </a>
-                </div>
-              </div>
+                <Eye size={19} />
+              </button>
             ),
           )}
         </div>
         <p className="materials-note">
           {en
-            ? "Further information and videos can be downloaded on "
-            : "Дополнительную информацию и видео можно скачать на сайте "}
+            ? "Further information and videos are available at "
+            : "Дополнительная информация и видео доступны на сайте "}
           <a href="https://femtomed.ru" target="_blank" rel="noreferrer">
             femtomed.ru
           </a>
@@ -471,18 +461,6 @@ export function DetailPage() {
                 <strong id="pdf-viewer-title">{previewItem.title}</strong>
               </div>
               <div className="pdf-viewer-actions">
-                <a
-                  href={`${previewItem.href}?download=1`}
-                  download
-                  aria-label={
-                    en
-                      ? `Download ${previewItem.title}`
-                      : `Скачать ${previewItem.title}`
-                  }
-                  title={en ? "Download" : "Скачать"}
-                >
-                  <Download size={20} />
-                </a>
                 <button
                   ref={previewCloseButtonRef}
                   type="button"
@@ -494,7 +472,26 @@ export function DetailPage() {
                 </button>
               </div>
             </header>
-            <iframe src={previewItem.href} title={previewItem.title} />
+            <Suspense
+              fallback={
+                <div className="pdf-document-status">
+                  <Loader
+                    label={en ? "Loading brochure…" : "Загружаем брошюру…"}
+                    variant="panel"
+                  />
+                </div>
+              }
+            >
+              <PdfDocumentViewer
+                src={previewItem.href}
+                loadingLabel={en ? "Loading brochure…" : "Загружаем брошюру…"}
+                errorLabel={
+                  en
+                    ? "The brochure could not be displayed"
+                    : "Не удалось отобразить брошюру"
+                }
+              />
+            </Suspense>
           </section>
         </div>
       )}
