@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -6,6 +6,7 @@ import {
   Eye,
   MapPin,
   Play,
+  X,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getConferenceContent } from "../data/conference";
@@ -26,6 +27,8 @@ export function DetailPage() {
   const [rating, setRating] = useState(0);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [previewItem, setPreviewItem] = useState(null);
+  const previewCloseButtonRef = useRef(null);
   const en = language === "en";
   const materials = [
     {
@@ -58,6 +61,27 @@ export function DetailPage() {
       external: true,
     },
   ];
+
+  useEffect(() => {
+    if (!previewItem) return undefined;
+
+    const scrollY = window.scrollY;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setPreviewItem(null);
+    };
+
+    document.documentElement.classList.add("pdf-preview-open");
+    document.body.style.top = `-${scrollY}px`;
+    window.addEventListener("keydown", closeOnEscape);
+    previewCloseButtonRef.current?.focus();
+
+    return () => {
+      document.documentElement.classList.remove("pdf-preview-open");
+      document.body.style.top = "";
+      window.removeEventListener("keydown", closeOnEscape);
+      window.scrollTo(0, scrollY);
+    };
+  }, [previewItem]);
 
   if (!item) return null;
   const Icon = item.icon;
@@ -265,20 +289,34 @@ export function DetailPage() {
                 <ArrowUpRight size={18} />
               </a>
             ) : (
-              <a
-                key={item.title}
-                href={item.href}
-                download
-                aria-label={
-                  en
-                    ? `Download ${item.title}`
-                    : `Скачать ${item.title}`
-                }
-              >
+              <div className="download-row" key={item.title}>
                 <span className="download-type">PDF</span>
                 <strong>{item.title}</strong>
-                <Download size={18} />
-              </a>
+                <div className="material-actions">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewItem(item)}
+                    aria-label={
+                      en ? `View ${item.title}` : `Просмотреть ${item.title}`
+                    }
+                    title={en ? "View" : "Просмотреть"}
+                  >
+                    <Eye size={18} />
+                  </button>
+                  <a
+                    href={`${item.href}?download=1`}
+                    download
+                    aria-label={
+                      en
+                        ? `Download ${item.title}`
+                        : `Скачать ${item.title}`
+                    }
+                    title={en ? "Download" : "Скачать"}
+                  >
+                    <Download size={18} />
+                  </a>
+                </div>
+              </div>
             ),
           )}
         </div>
@@ -394,23 +432,72 @@ export function DetailPage() {
     ),
   };
   return (
-    <main className="detail-page">
-      <section className="detail-hero">
-        <div className="detail-heading">
-          <Link className="back-button" to="/">
-            <ArrowLeft size={17} /> {t("back")}
-          </Link>
-          <p className="eyebrow">{item.eyebrow}</p>
+    <>
+      <main className="detail-page">
+        <section className="detail-hero">
+          <div className="detail-heading">
+            <Link className="back-button" to="/">
+              <ArrowLeft size={17} /> {t("back")}
+            </Link>
+            <p className="eyebrow">{item.eyebrow}</p>
+          </div>
+          <div className="detail-title-row">
+            <span className="detail-icon">
+              <Icon size={28} />
+            </span>
+            <h1>{item.title}</h1>
+          </div>
+          <p>{item.text}</p>
+        </section>
+        <section className="detail-content">{bodies[pageId]}</section>
+      </main>
+      {previewItem && (
+        <div
+          className="pdf-viewer-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setPreviewItem(null);
+          }}
+        >
+          <section
+            className="pdf-viewer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pdf-viewer-title"
+          >
+            <header className="pdf-viewer-header">
+              <div>
+                <span>PDF</span>
+                <strong id="pdf-viewer-title">{previewItem.title}</strong>
+              </div>
+              <div className="pdf-viewer-actions">
+                <a
+                  href={`${previewItem.href}?download=1`}
+                  download
+                  aria-label={
+                    en
+                      ? `Download ${previewItem.title}`
+                      : `Скачать ${previewItem.title}`
+                  }
+                  title={en ? "Download" : "Скачать"}
+                >
+                  <Download size={20} />
+                </a>
+                <button
+                  ref={previewCloseButtonRef}
+                  type="button"
+                  onClick={() => setPreviewItem(null)}
+                  aria-label={en ? "Close brochure" : "Закрыть брошюру"}
+                  title={en ? "Close" : "Закрыть"}
+                >
+                  <X size={22} />
+                </button>
+              </div>
+            </header>
+            <iframe src={previewItem.href} title={previewItem.title} />
+          </section>
         </div>
-        <div className="detail-title-row">
-          <span className="detail-icon">
-            <Icon size={28} />
-          </span>
-          <h1>{item.title}</h1>
-        </div>
-        <p>{item.text}</p>
-      </section>
-      <section className="detail-content">{bodies[pageId]}</section>
-    </main>
+      )}
+    </>
   );
 }

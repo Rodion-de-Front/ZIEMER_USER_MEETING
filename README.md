@@ -32,6 +32,14 @@ docker compose -f docker-compose.dev.yml up --build
 
 В `.env` задайте `PORT=6262` и `CORS_ORIGIN=https://ziemergroup.ru,https://www.ziemergroup.ru`.
 
+Для отправки 6-значных кодов восстановления пароля и подтверждения почты при регистрации настройте SMTP-переменные
+`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD` и
+`SMTP_FROM`. При необходимости отправителя можно отдельно переопределить через
+`PASSWORD_RESET_EMAIL_FROM` и `REGISTRATION_EMAIL_FROM`. По умолчанию код
+действует 10 минут, допускается 5 попыток ввода; значения меняются через
+`PASSWORD_RESET_CODE_TTL_MINUTES`, `PASSWORD_RESET_MAX_ATTEMPTS`,
+`EMAIL_VERIFICATION_CODE_TTL_MINUTES` и `EMAIL_VERIFICATION_MAX_ATTEMPTS`.
+
 ## Данные и сброс
 
 PostgreSQL использует именованный Docker volume. Обычный `docker compose down`, перезапуск или падение контейнера не удаляют данные.
