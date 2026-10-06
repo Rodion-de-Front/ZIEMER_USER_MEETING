@@ -127,9 +127,7 @@ export const content = {
       },
     },
 
-    programMeta: [
-      { label: "Модератор", value: "Слонимский А. Ю." },
-    ],
+    programMeta: [{ label: "Модератор", value: "Слонимский А. Ю." }],
 
     schedule: [
       { time: "09:00–10:00", title: "Регистрация и приветственный кофе" },
@@ -272,7 +270,7 @@ export const content = {
       {
         time: "15:30–15:40",
         title:
-          "Фемтосекундные технологии в кератопротезировании: этапы внедрения и отдельные результаты",
+          "Фемтосекундные технологии в кератопротезировании: этапы внедрения и отдаленные результаты",
         speaker: "Головин Андрей Владимирович",
       },
       {
@@ -414,9 +412,7 @@ export const content = {
       },
     },
 
-    programMeta: [
-      { label: "Moderator", value: "Slonimsky A. Yu." },
-    ],
+    programMeta: [{ label: "Moderator", value: "Slonimsky A. Yu." }],
 
     schedule: [
       { time: "09:00–10:00", title: "Registration and welcome coffee" },
@@ -561,7 +557,7 @@ export const content = {
       {
         time: "15:30–15:40",
         title:
-          "Femtosecond technologies in keratoprosthesis: implementation stages and selected results",
+          "Femtosecond technologies in keratoprosthetics: implementation stages and long-term results",
         speaker: "Andrey Vladimirovich Golovin",
       },
       {
