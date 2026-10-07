@@ -1431,6 +1431,9 @@ footer .logo {
   background: #747474;
   text-align: center;
 }
+.pdf-document-status .loader {
+  color: #fff;
+}
 @keyframes pdf-page-loading {
   to { background-position: -200% 0; }
 }

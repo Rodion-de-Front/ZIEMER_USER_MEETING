@@ -132,14 +132,14 @@ export const content = {
     schedule: [
       { time: "09:00–10:00", title: "Регистрация и приветственный кофе" },
       {
-        time: "10:00–10:25",
+        time: "10:00–10:30",
         title: "Вступительное слово",
         speakers: [
-          { name: "Нероев Владимир Владимирович", note: "10 мин" },
-          { name: "Франк Цимер", note: "видеоприветствие · 3 мин" },
+          { name: "Нероев Владимир Владимирович", note: "5 мин" },
           { name: "Мушкова Ирина Альфредовна", note: "3 мин" },
           { name: "Антонюк Владимир Дмитриевич", note: "3 мин" },
-          { name: "Слонимский Алексей Юрьевич", note: "5 мин" },
+          { name: "Франк Цимер", note: "видео приветствие · 16 мин" },
+          { name: "Слонимский Алексей Юрьевич", note: "2 мин" },
         ],
       },
       {
@@ -417,14 +417,14 @@ export const content = {
     schedule: [
       { time: "09:00–10:00", title: "Registration and welcome coffee" },
       {
-        time: "10:00–10:25",
+        time: "10:00–10:30",
         title: "Opening remarks",
         speakers: [
-          { name: "Vladimir Vladimirovich Neroev", note: "10 min" },
-          { name: "Frank Ziemer", note: "video greeting · 3 min" },
+          { name: "Vladimir Vladimirovich Neroev", note: "5 min" },
           { name: "Irina Alfredovna Mushkova", note: "3 min" },
           { name: "Vladimir Dmitrievich Antonyuk", note: "3 min" },
-          { name: "Alexey Yuryevich Slonimsky", note: "5 min" },
+          { name: "Frank Ziemer", note: "video greeting · 16 min" },
+          { name: "Alexey Yuryevich Slonimsky", note: "2 min" },
         ],
       },
       {
