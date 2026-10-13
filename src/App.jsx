@@ -13,6 +13,7 @@ import { AdminPage } from './pages/AdminPage'
 import { BlockedPage } from './pages/BlockedPage'
 import { DetailPage } from './pages/DetailPage'
 import { HomePage } from './pages/HomePage'
+import { MeetingPage } from './pages/MeetingPage'
 import { useLanguage } from './i18n'
 
 function Application({ profile, onSignOut }) {
@@ -75,6 +76,7 @@ function Application({ profile, onSignOut }) {
       <Header onMenuOpen={() => openSidebar('navigation')} onNotificationsOpen={() => { setHasUnread(false); openSidebar('notifications') }} isAdmin={isAdmin} onSignOut={onSignOut} hasUnread={hasUnread} />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/meeting" element={<MeetingPage />} />
         <Route path="/admin" element={isAdmin ? <AdminPage /> : <Navigate to="/" replace />} />
         <Route path="/:pageId" element={<DetailPage />} />
       </Routes>

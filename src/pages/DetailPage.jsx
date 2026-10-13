@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getConferenceContent } from "../data/conference";
+import { clubGallery, galleryUrl } from "../data/gallery";
 import { Loader } from "../components/Loader";
 import { useLanguage } from "../i18n";
 import { api } from "../lib/api";
@@ -261,12 +262,18 @@ export function DetailPage() {
       </section>
     ),
     photos: (
-      <section className="materials-placeholder">
-        <p>
-          {en
-            ? "Materials will appear after the event"
-            : "Материалы появятся после мероприятия"}
-        </p>
+      <section className="detail-photo-gallery">
+        <div className="detail-photo-grid">
+          {clubGallery.map((photo) => (
+            <a href={galleryUrl} target="_blank" rel="noreferrer" key={photo.src}>
+              <img loading="lazy" src={photo.src} alt={en ? photo.altEn : photo.altRu} />
+            </a>
+          ))}
+        </div>
+        <a className="button button-primary gallery-button" href={galleryUrl} target="_blank" rel="noreferrer">
+          {en ? "Open all 862 photos" : "Смотреть все 862 фото"}<ArrowUpRight size={18} />
+        </a>
+        <p className="gallery-credit">{en ? "Photo: Slava Semenov" : "Фото: Слава Семёнов"}</p>
       </section>
     ),
     abstracts: (

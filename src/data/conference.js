@@ -102,9 +102,9 @@ export const content = {
         icon: Play,
       },
       photos: {
-        eyebrow: "После мероприятия",
+        eyebrow: "Галерея · 09.10.2026",
         title: "Фото ZUM",
-        text: "Фотографии с мероприятия будут собраны в закрытой галерее для участников.",
+        text: "Фотохроника ZIEMER User Meeting: научная программа, встречи с коллегами и вечер в джаз-клубе.",
         icon: Image,
       },
       abstracts: {
@@ -387,9 +387,9 @@ export const content = {
         icon: Play,
       },
       photos: {
-        eyebrow: "After the event",
+        eyebrow: "Gallery · 09.10.2026",
         title: "ZUM photos",
-        text: "Event photos will be collected in a private gallery for participants.",
+        text: "The ZIEMER User Meeting photo story: the scientific programme, conversations with colleagues and the jazz club evening.",
         icon: Image,
       },
       abstracts: {

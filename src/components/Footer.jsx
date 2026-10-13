@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer>
       <Logo />
-      <span>ZIEMER USER MEETING · 2026</span>
+      <span>ZIEMER CLUB · 2026</span>
     </footer>
   )
 }

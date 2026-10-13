@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, LogOut, Search, X } from "lucide-react";
+import { CalendarCheck, ChevronRight, FileText, Home, LogOut, MessageCircleHeart, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
 import { Loader } from "./Loader";
-import { getConferenceContent } from "../data/conference";
 import { api } from "../lib/api";
 import { useLanguage } from "../i18n";
 
 export function NavigationSidebar({ isClosing, onClose, onSignOut, profile }) {
   const { language, t } = useLanguage();
-  const { sections } = getConferenceContent(language);
-  const [query, setQuery] = useState("");
-  const normalizedQuery = query.trim().toLocaleLowerCase(language);
-  const visibleSections = sections.filter(({ title, caption }) =>
-    `${title} ${caption}`.toLocaleLowerCase(language).includes(normalizedQuery),
-  );
 
   return (
     <aside
@@ -30,36 +23,27 @@ export function NavigationSidebar({ isClosing, onClose, onSignOut, profile }) {
         <X size={19} />
       </button>
       <Logo />
-      <label className="sidebar-search">
-        <Search size={17} aria-hidden="true" />
-        <input
-          type="text"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t("searchPlaceholder")}
-          aria-label={t("search")}
-        />
-        {query && (
-          <button
-            type="button"
-            aria-label={t("close")}
-            onClick={() => setQuery("")}
-          >
-            <X size={15} />
-          </button>
-        )}
-      </label>
       <h3>{t('sections')}</h3>
-      {visibleSections.map(({ id, icon: Icon, title }) => (
-        <Link key={id} to={`/${id}`} onClick={onClose}>
-          <Icon size={17} />
-          <span>{title}</span>
-          <ChevronRight size={16} />
-        </Link>
-      ))}
-      {normalizedQuery && !visibleSections.length && (
-        <p className="sidebar-search-empty">{t("searchEmpty")}</p>
-      )}
+      <Link to="/" onClick={onClose}>
+        <Home size={17} />
+        <span>{language === "en" ? "Club home" : "Главная"}</span>
+        <ChevronRight size={16} />
+      </Link>
+      <Link to="/meeting" onClick={onClose}>
+        <CalendarCheck size={17} />
+        <span>ZIEMER User Meeting 2026</span>
+        <ChevronRight size={16} />
+      </Link>
+      <Link to="/feedback" onClick={onClose}>
+        <MessageCircleHeart size={17} />
+        <span>{language === "en" ? "Feedback" : "Отзывы"}</span>
+        <ChevronRight size={16} />
+      </Link>
+      <Link to="/materials" onClick={onClose}>
+        <FileText size={17} />
+        <span>{language === "en" ? "Useful materials" : "Полезные материалы"}</span>
+        <ChevronRight size={16} />
+      </Link>
       <div className="sidebar-user">
         <div>
           <strong>{profile.full_name || t('participant')}</strong>
