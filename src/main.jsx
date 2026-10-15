@@ -12,7 +12,25 @@ window.addEventListener('beforeinstallprompt', (event) => {
   window.dispatchEvent(new Event('pwa-install-ready'))
 })
 
-registerSW({ immediate: true })
+registerSW({
+  immediate: true,
+  onRegisteredSW(_serviceWorkerUrl, registration) {
+    if (!registration) return
+
+    const checkForUpdate = () => {
+      if (navigator.onLine) registration.update().catch(() => {})
+    }
+
+    // Installed PWAs can stay open for days, so a navigation alone is not a
+    // reliable update trigger. Check while the app is open and whenever the
+    // user returns to it. autoUpdate reloads once the new worker is activated.
+    window.setInterval(checkForUpdate, 5 * 60 * 1000)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') checkForUpdate()
+    })
+    window.addEventListener('online', checkForUpdate)
+  },
+})
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
